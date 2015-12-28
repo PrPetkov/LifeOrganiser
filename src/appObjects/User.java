@@ -9,12 +9,33 @@ import java.util.List;
 
 public class User {
 
-    private String name;
-    private String pass;
+    static final String userName;
+    private String password;
+    
     private List<Task> tasks;
     private List<Account> accounts;
     private List<TODOTask> todos;
     
-    // TEST
+		
+	User(String userName, String password) {
+		setName(userName);
+		setPassword(password);
+	}
+	
+	default String setPassword(String password) {
+		this.password = password;
+	}
+	
+	default void getPassword() {
+		return this.password;
+	}
     
+	private String setUserName(String userName) {
+		this.userName = userName;
+	}
+	
+	private void getUserName() {
+		return this.userName;
+	}
+	
 }
