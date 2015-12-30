@@ -1,8 +1,21 @@
 package appObjects.accounts;
 
 
-public abstract class CreditAccount implements IAccount {
+public abstract class CreditAccount extends Account {
 	
-	String creditAccountName;
+	private String creditAccountName;
+	
+	CreditAccount(String creditAccountName) {
+		setCreditAccountName(creditAccountName);
+	}
+	
+	// getters and setters
+	public String getCreditAccountName() {
+		return this.creditAccountName;
+	}
+	
+	public void setCreditAccountName(String creditAccountName) {
+		this.creditAccountName = creditAccountName;
+	}
 	
 }

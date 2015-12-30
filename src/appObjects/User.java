@@ -16,6 +16,7 @@ public class User {
     private List<Account> accounts;
     private List<TODOTask> todos;
     
+    Money money;
 		
 	User(String userName, String password) {
 		setName(userName);
