@@ -1,5 +1,17 @@
 package states;
 
 
-public class ListViewState extends State {
+import appObjects.User;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+public class ListViewState extends UserState {
+
+    public ListViewState(User user) {
+        super(user);
+    }
+
+    @Override
+    public void draw() {
+        throw new NotImplementedException();
+    }
 }

@@ -1,5 +1,19 @@
 package states;
 
 
-public class TODOState extends TaskState {
+import appObjects.User;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+public class TODOState extends UserState {
+
+
+    public TODOState(User user) {
+        super(user);
+    }
+
+    @Override
+    public void draw() {
+        throw new NotImplementedException();
+    }
+
 }

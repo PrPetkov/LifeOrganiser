@@ -1,6 +1,17 @@
 package states;
 
 
-public class CalendarState extends State {
-	
+import appObjects.User;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+public class CalendarState extends UserState {
+
+    public CalendarState(User user) {
+        super(user);
+    }
+
+    @Override
+    public void draw() {
+        throw new NotImplementedException();
+    }
 }
