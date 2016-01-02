@@ -1,14 +1,40 @@
 package appObjects.accounts;
 
 
-public abstract class Account extends User implements IAccount {
+import Interfaces.IAccount;
+
+import java.math.BigDecimal;
+import java.util.Currency;
+
+public abstract class Account implements IAccount {
 	
 	private String accountName;
-	private String accountPassword;
-	
-	Account(String acountName, String accountPassword) {
-		setAccountName(acountName);
-		getAccountName(accountPassword);
+	private Currency currency;
+	private BigDecimal amount;
+
+	public Account(String accountName, Currency currency, BigDecimal amount) {
+
+		this.setAccountName(accountName);
+		this.setCurrency(currency);
+		this.setAmount(amount);
+
+	}
+
+	public Currency getCurrency() {
+
+		return currency;
+	}
+
+	private void setCurrency(Currency currency) {
+		this.currency = currency;
+	}
+
+	public BigDecimal getAmount() {
+		return amount;
+	}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
 	}
 	
 	public void setAccountName(String accountName) {
@@ -19,11 +45,5 @@ public abstract class Account extends User implements IAccount {
 		return this.accountName;
 	}
 	
-	public void setAccountPassword(String accountPassword) {
-		this.accountPassword = accountPassword;
-	}
-	
-	public String getAccountPassword() {
-		return this.accountPassword;
-	}
+
 }

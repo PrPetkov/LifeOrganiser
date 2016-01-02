@@ -1,30 +1,50 @@
 package appObjects.tasks;
 
 
-public abstract class Task extends User{
+import java.util.Date;
+
+public abstract class Task{
 
     private String taskName;
     private String taskType;
-    
-    Task(String taskName, String taskType) {
+	private boolean isDone;
+	private Date date;
+
+
+	Task(String taskName, String taskType) {
     	setTaskName(taskName);
     	setTaskType(taskType);
     }
-    
-    private String setTaskName(String taskName) {
+
+	public boolean isDone() {
+		return isDone;
+	}
+
+	public void setIsDone(boolean isDone) {
+		this.isDone = isDone;
+	}
+
+    private void setTaskName(String taskName) {
 		this.taskName = taskName;
 	}
 	
-	private void getTaskName() {
+	public String getTaskName() {
 		return this.taskName;
 	}
 	
-	private String setTaskType(String taskType) {
+	private void setTaskType(String taskType) {
 		this.taskType = taskType;
 	}
 	
-	private void getTaskType() {
+	public String getTaskType() {
 		return this.taskType;
 	}
-    
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
 }
