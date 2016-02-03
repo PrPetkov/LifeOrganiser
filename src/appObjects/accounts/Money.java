@@ -1,26 +1,35 @@
+package appObjects.accounts;
 
-public class Money {
+import appObjects.accounts.Account;
+
+import java.math.BigDecimal;
+
+public class Money extends BigDecimal {
 
 	private String currency; // TODO currency
 	private BigDecimal ammount;
 
 	Account account;
 
-	Account addMoney(double addedAmmount) {
-		if (addedAmmount <= 0) {
-			System.out.println("Must add positive ammount.");
-			return this.ammount;
-		}
-		return this.ammount += addedAmmount;
+	public Money(double val) {
+		super(val);
 	}
 
-	Account removeMoney(double removedAmmount) {
-		if (this.ammount < removedAmmount) {
-			System.out.println("Insufficient money for operation.");
-			return this.ammount;
-		}
-		return this.ammount -= removedAmmount;
-	}
+//	public Money addMoney(double addedAmmount) {
+//		if (addedAmmount <= 0) {
+//			System.out.println("Must add positive ammount.");
+//			return this.ammount;
+//		}
+//		return this.ammount += addedAmmount;
+//	}
+//
+//	Account removeMoney(double removedAmmount) {
+//		if (this.ammount < removedAmmount) {
+//			System.out.println("Insufficient money for operation.");
+//			return this.ammount;
+//		}
+//		return this.ammount -= removedAmmount;
+//	}
 
 	// getters and setters
 	public String getCurrency() {

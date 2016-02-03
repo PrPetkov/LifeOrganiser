@@ -2,18 +2,19 @@ package appObjects.accounts;
 
 
 import appObjects.User;
+import appObjects.tasks.RecieveMoneyTask;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Currency;
-import java.util.Date;
 
 public class Deposit extends DebitAccount {
 
     double interest;
-    Date maturity;
+    LocalDateTime maturity;
 
-    public Deposit(String accountName, Currency currency, BigDecimal amount, double interest, Date maturity) {
+    public Deposit(String accountName, Currency currency, BigDecimal amount, double interest, LocalDateTime maturity) {
         super(accountName, currency, amount);
         this.setInterest(interest);
         this.setMaturity(maturity);
@@ -23,15 +24,17 @@ public class Deposit extends DebitAccount {
         return interest;
     }
 
-    public void setInterest(double interest) {
-        this.interest = interest;
+    private void setInterest(double interest) {
+        if (interest >= 0) {
+            this.interest = interest;
+        }
     }
 
-    public Date getMaturity() {
+    public LocalDateTime getMaturity() {
         return maturity;
     }
 
-    public void setMaturity(Date maturity) {
+    private void setMaturity(LocalDateTime maturity) {
         this.maturity = maturity;
     }
 
@@ -40,6 +43,6 @@ public class Deposit extends DebitAccount {
     }
 
     public void generateTask(User user){
-        throw new NotImplementedException();
+        user.addTask(new RecieveMoneyTask("Deposit maturiry", this.maturity, super.getAmount()));
     }
 }

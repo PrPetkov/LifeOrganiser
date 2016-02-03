@@ -4,6 +4,7 @@ package appObjects.tasks;
 import Interfaces.IShoppingEntry;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +12,8 @@ public class ShoppingList extends Task {
 
     private List<IShoppingEntry> entries;
 
-    public ShoppingList(String taskName){
-        super(taskName, "ShoppingList");
+    public ShoppingList(String taskName, LocalDateTime date){
+        super(taskName, date);
 
         this.entries = new ArrayList<IShoppingEntry>();
 

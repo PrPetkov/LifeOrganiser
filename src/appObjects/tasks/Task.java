@@ -1,50 +1,45 @@
 package appObjects.tasks;
 
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public abstract class Task{
 
     private String taskName;
-    private String taskType;
 	private boolean isDone;
-	private Date date;
+	private LocalDateTime date;
 
 
-	Task(String taskName, String taskType) {
-    	setTaskName(taskName);
-    	setTaskType(taskType);
+	Task(String taskName, LocalDateTime dateTime) {
+    	this.setTaskName(taskName);
+        this.setDate(dateTime);
     }
 
 	public boolean isDone() {
 		return isDone;
 	}
 
-	public void setIsDone(boolean isDone) {
+	protected void setIsDone(boolean isDone) {
 		this.isDone = isDone;
 	}
 
-    private void setTaskName(String taskName) {
-		this.taskName = taskName;
+    protected void setTaskName(String taskName) {
+		if (taskName != null) {
+            this.taskName = taskName;
+        }
 	}
 	
 	public String getTaskName() {
 		return this.taskName;
 	}
-	
-	private void setTaskType(String taskType) {
-		this.taskType = taskType;
-	}
-	
-	public String getTaskType() {
-		return this.taskType;
-	}
 
-	public Date getDate() {
+	public LocalDateTime getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setDate(LocalDateTime date) {
+        if (date != null) {
+            this.date = date;
+        }
 	}
 }

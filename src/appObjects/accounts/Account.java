@@ -1,7 +1,9 @@
 package appObjects.accounts;
 
 
+import Exceptions.AccountException;
 import Interfaces.IAccount;
+import appObjects.User;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -16,16 +18,23 @@ public abstract class Account implements IAccount {
 
 		this.setAccountName(accountName);
 		this.setCurrency(currency);
+        try{
 		this.setAmount(amount);
+        } catch (AccountException e){
+            //TODO throw exception to the user
+        }
 
 	}
 
 	public Currency getCurrency() {
-
 		return currency;
 	}
 
-	private void setCurrency(Currency currency) {
+	protected void setCurrency(Currency currency) {
+		if (currency == null){
+            return;
+        }
+
 		this.currency = currency;
 	}
 
@@ -33,17 +42,26 @@ public abstract class Account implements IAccount {
 		return amount;
 	}
 
-	public void setAmount(BigDecimal amount) {
-		this.amount = amount;
+	protected void setAmount(BigDecimal amount) throws AccountException {
+		if (amount.compareTo(new BigDecimal(0)) >= 0) {
+            this.amount = amount;
+        }
 	}
 	
 	public void setAccountName(String accountName) {
-		this.accountName = accountName;
+        if (accountName != null) {
+            this.accountName = accountName;
+        }
 	}
 	
 	public String getAccountName() {
 		return this.accountName;
 	}
-	
+
+    public abstract void withdrawMoney(BigDecimal money);
+
+    public abstract void insertMoney(BigDecimal money);
+
+    public abstract void generateTask(User user);
 
 }

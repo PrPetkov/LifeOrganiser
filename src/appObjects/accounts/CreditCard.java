@@ -1,32 +1,36 @@
 package appObjects.accounts;
 
 
+import Exceptions.AccountException;
 import appObjects.User;
+import appObjects.tasks.PayTask;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Currency;
-import java.util.Date;
 
 public class CreditCard extends CreditAccount {
 
-    int gratisPeriodDays;
+    private BigDecimal limit;
 
-    public CreditCard(String accountName, Currency currency, BigDecimal amount, double interest, Date payDay, int gratisPeriodDays) {
+    public CreditCard(String accountName, Currency currency, BigDecimal amount, double interest, LocalDateTime payDay, BigDecimal limit) {
         super(accountName, currency, amount, interest, payDay);
-        this.setGratisPeriodDays(gratisPeriodDays);
-    }
 
-    public int getGratisPeriodDays() {
-        return gratisPeriodDays;
-    }
-
-    public void setGratisPeriodDays(int gratisPeriodDays) {
-        this.gratisPeriodDays = gratisPeriodDays;
     }
 
     @Override
-    protected void generateTask(User user) {
-        throw new NotImplementedException();
+    protected void setAmount(BigDecimal amount) throws AccountException {
+        if ((new BigDecimal(0).add(super.getAmount().add(amount)).compareTo(this.limit)) <= 0 ) {
+            super.setAmount(amount.add(super.getAmount()));
+        }else {
+            throw new AccountException("The credit card can not exceed it's limit");
+        }
+    }
+
+
+    @Override
+    public void generateTask(User user) {
+        user.addTask(new PayTask("Credit card payment", super.getPayDay(), super.getAmount()));
     }
 }
