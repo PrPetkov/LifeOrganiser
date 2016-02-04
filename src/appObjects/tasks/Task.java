@@ -9,7 +9,6 @@ public abstract class Task{
 	private boolean isDone;
 	private LocalDateTime date;
 
-
 	Task(String taskName, LocalDateTime dateTime) {
     	this.setTaskName(taskName);
         this.setDate(dateTime);
@@ -37,7 +36,7 @@ public abstract class Task{
 		return date;
 	}
 
-	public void setDate(LocalDateTime date) {
+	protected void setDate(LocalDateTime date) {
         if (date != null) {
             this.date = date;
         }

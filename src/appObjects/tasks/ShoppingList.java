@@ -20,22 +20,23 @@ public class ShoppingList extends Task {
     }
 
     public void addEntry(IShoppingEntry entry){
+        if (entry == null){
+            return;
+        }
 
         this.entries.add(entry);
-
     }
 
     public void removeEntry(IShoppingEntry entry){
+        if (entry == null){
+            return;
+        }
 
-        //TODO remove specific entry
-        throw new NotImplementedException();
-
+        this.entries.remove(entry);
     }
 
     public Iterable<IShoppingEntry> getShoppingListEnties(){
-
         return this.entries;
-
     }
 
 }

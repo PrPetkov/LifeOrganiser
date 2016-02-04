@@ -2,7 +2,6 @@ package appObjects.tasks;
 
 
 import Interfaces.ITODO;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class TODOTask implements ITODO {
 
@@ -10,38 +9,36 @@ public class TODOTask implements ITODO {
     private String description;
     private boolean isDone;
 
-    public TODOTask(String taskName){
-
-        throw new NotImplementedException();
-
+    public TODOTask(String description, String name, boolean isDone) {
+        this.setDescription(description);
+        this.setName(name);
+        this.setDone(isDone);
     }
 
-    @Override
+
     public String getName() {
-        return this.name;
+        return name;
+    }
+
+    protected void setName(String name) {
+        this.name = name;
     }
 
     @Override
     public String getDescription() {
-        return this.description;
+        return description;
     }
 
-    @Override
-    public void setDescription(String description) {
-
+    protected void setDescription(String description) {
         this.description = description;
-
     }
 
     @Override
     public boolean isDone() {
-        return this.isDone;
+        return isDone;
     }
 
-    @Override
-    public void setIsDone(boolean isDone) {
-
-        this.isDone = isDone;
-
+    protected void setDone(boolean done) {
+        isDone = done;
     }
 }

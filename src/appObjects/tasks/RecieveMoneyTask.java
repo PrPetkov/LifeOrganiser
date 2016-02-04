@@ -11,6 +11,16 @@ public class RecieveMoneyTask extends Task {
     public RecieveMoneyTask(String taskName, LocalDateTime dateTime, BigDecimal ammount) {
         super(taskName, dateTime);
 
-        this.ammount = ammount;
+        this.setAmmount(ammount);
+    }
+
+    public BigDecimal getAmmount() {
+        return ammount;
+    }
+
+    private void setAmmount(BigDecimal ammount) {
+        if (ammount != null && ammount.compareTo(new BigDecimal(0)) >= 0) {
+            this.ammount = ammount;
+        }
     }
 }

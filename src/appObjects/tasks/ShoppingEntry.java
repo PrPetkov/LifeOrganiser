@@ -6,7 +6,6 @@ import Interfaces.IShoppingEntry;
 public class ShoppingEntry implements IShoppingEntry {
 
     private String productName;
-    private String description;
     private double quantity;
     private boolean isBought;
 
@@ -16,19 +15,11 @@ public class ShoppingEntry implements IShoppingEntry {
 
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public boolean isBought() {
         return isBought;
     }
 
-    public void setIsBought(boolean isBought) {
+    private void setIsBought(boolean isBought) {
         this.isBought = isBought;
     }
 
@@ -36,7 +27,7 @@ public class ShoppingEntry implements IShoppingEntry {
         return quantity;
     }
 
-    public void setQuantity(double quantity) {
+    private void setQuantity(double quantity) {
         this.quantity = quantity;
     }
 
