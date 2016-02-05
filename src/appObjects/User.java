@@ -19,10 +19,16 @@ public class User {
     private List<Task> tasks;
     private List<Account> accounts;
     private List<ITODO> todos;
+
+    private static User user;
     
 //    Money money;
-		
-	User(String userName, String password) {
+
+    private User(){
+
+    }
+
+	private User(String userName, String password) {
 		this.tasks = new ArrayList<>();
 		this.accounts = new ArrayList<>();
 		this.todos = new ArrayList<>();
@@ -30,7 +36,15 @@ public class User {
 		setUserName(userName);
 		setPassword(password);
 	}
-	
+
+    public static User getUser(){
+        if (User.user == null){
+            User.user = new User();
+        }
+
+        return User.user;
+    }
+
 	private void setPassword(String password) {
 		this.password = password;
 	}
@@ -70,4 +84,14 @@ public class User {
 	public void addTODO(ITODO todo){
 		this.todos.add(todo);
 	}
+
+	public static boolean isValidUser(String username, String password) {
+        if (username == null || password == null){
+            return false;
+        }
+
+		//TODO check in the database for the user
+        return true;
+	}
+
 }
