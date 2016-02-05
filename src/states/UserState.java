@@ -9,9 +9,7 @@ public abstract class UserState implements IState {
     private User user;
 
     public UserState(User user) {
-
         this.setUser(user);
-
     }
 
     protected User getUser() {
@@ -22,6 +20,4 @@ public abstract class UserState implements IState {
         this.user = user;
     }
 
-    @Override
-    public abstract void draw();
 }

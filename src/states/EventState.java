@@ -12,9 +12,4 @@ public class EventState extends TaskState {
     public EventState(User user, Event event) {
         super(user, event);
     }
-
-    @Override
-    public void draw() {
-        throw new NotImplementedException();
-    }
 }

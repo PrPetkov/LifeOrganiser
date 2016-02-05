@@ -23,8 +23,6 @@ public class User {
 //    Money money;
 		
 	User(String userName, String password) {
-
-
 		this.tasks = new ArrayList<>();
 		this.accounts = new ArrayList<>();
 		this.todos = new ArrayList<>();
@@ -62,25 +60,14 @@ public class User {
 	}
 
 	public void addTask(Task task){
-
 		this.tasks.add(task);
-
 	}
 
 	public void addAccount(Account account){
-
 		this.accounts.add(account);
-
 	}
 
 	public void addTODO(ITODO todo){
-
 		this.todos.add(todo);
-
 	}
-
-	public BigDecimal calcMoney(){
-		throw new NotImplementedException();
-	}
-
 }

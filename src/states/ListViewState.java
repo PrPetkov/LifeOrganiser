@@ -9,9 +9,4 @@ public class ListViewState extends UserState {
     public ListViewState(User user) {
         super(user);
     }
-
-    @Override
-    public void draw() {
-        throw new NotImplementedException();
-    }
 }

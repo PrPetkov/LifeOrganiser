@@ -12,7 +12,6 @@ public abstract class TaskState extends UserState {
         super(user);
 
         this.setTask(task);
-
     }
 
     protected Task getTask() {
@@ -22,7 +21,4 @@ public abstract class TaskState extends UserState {
     protected void setTask(Task task) {
         this.task = task;
     }
-
-    @Override
-    public abstract void draw();
 }

@@ -8,13 +8,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class PayStane extends TaskState {
 
-
     public PayStane(User user, PayTask payTask) {
         super(user, payTask);
-    }
-
-    @Override
-    public void draw() {
-        throw new NotImplementedException();
     }
 }

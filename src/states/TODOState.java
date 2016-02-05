@@ -6,14 +6,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class TODOState extends UserState {
 
-
     public TODOState(User user) {
         super(user);
     }
-
-    @Override
-    public void draw() {
-        throw new NotImplementedException();
-    }
-
 }

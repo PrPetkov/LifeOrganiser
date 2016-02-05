@@ -9,9 +9,4 @@ public class CalendarState extends UserState {
     public CalendarState(User user) {
         super(user);
     }
-
-    @Override
-    public void draw() {
-        throw new NotImplementedException();
-    }
 }
