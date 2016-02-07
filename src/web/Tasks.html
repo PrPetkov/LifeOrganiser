@@ -3,25 +3,64 @@
 <head>
 <meta charset="utf-8">
 	<title>MyTasks</title>
-	<link rel="stylesheet" href="resources/MainStyle.css">
+	<link rel="stylesheet" href="css/MainStyle.css">
 </head>
 <body>
 	<div class="container">
 		<header>
 			<br/><br/><a href="Main.html"><img src = "resources/MainLogo.jpg" alt="logo" /></a><br/><br/><br/>
 			<section class="right_side">
-			<article>
-				<header>
-					<h1>Your tasks<br/><br/>which you have  written to<br/><br/>do:</h1>
-				</header>
-				<ul>
-					<li></li>
-					<li></li>
-					<li></li>
-				</ul>
-				<br/>
-					<input type="button" value="Create new Task" style="height:25px; width:250px">
-			</article>
+			<table class="tasksSize" frame="box" bordercolor= "cyan" class="tableSignUp">
+				<tr class="forstRow" valign="top">
+					<td class="firstColumn">
+						<a>Task Name:</a>
+					</td>
+					<td class="secondColumn">
+						<a>Description:</a>
+					</td>		
+					<td class="thirdColumn">
+						<a></a>
+					</td>	
+					<td class="fourthColumn">
+						<a></a>
+					</td>				
+				</tr>
+				<tr valign="top">
+					<td>
+						<ul>
+							<li>Task 1</li>
+							<li>Task 2</li>
+							<li>Task 3</li>
+						</ul>
+					</td>
+					<td>
+						<ul>
+							<li>task description...</li>
+							<li>task description...</li>
+							<li>task description...</li>
+						</ul>
+					</td>
+					<td>
+						<ul>
+							<a href="EditTask.html">View</a>
+							<a href="EditTask.html">View</a>
+							<a href="EditTask.html">View</a>
+						</ul>
+					</td>
+					<td>
+						<ul>
+							<a href="EditTask.html">Edit</a>
+							<a href="EditTask.html">Edit</a>
+							<a href="EditTask.html">Edit</a>
+						</ul>
+					</td>
+				</tr>
+				<tr valign="bottom">
+					<td>
+						<a href="AddTask.html"><button>Add Task</button></a>
+					</td>
+				</tr>
+			</table>
 			</section>
 			<nav>
 				<table border="2" bordercolor= "cyan" cellpadding="10">

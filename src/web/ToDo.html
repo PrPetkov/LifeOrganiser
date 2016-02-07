@@ -3,29 +3,80 @@
 <head>
 <meta charset="utf-8">
 	<title>ToDoList</title>
-	<link rel="stylesheet" href="resources/MainStyle.css">
+	<link rel="stylesheet" href="css/MainStyle.css">
 </head>
 <body>
 	<header>
 			<br/><br/><a href="Main.html"><img src = "resources/MainLogo.jpg" alt="logo" /></a><br/><br/><br/>
 			<nav>
+				
+			<section class="right_side">
+			<table class="tasksSize" frame="box" bordercolor= "cyan" class="tableSignUp" align="right">
+				<tr class="forstRow" valign="top">
+					<td class="firstColumn">
+						<a>Task Name:</a>
+					</td>
+					<td>
+						<a>Description:</a>
+					</td>		
+					<td>
+						<a></a>
+					</td>	
+					<td>
+						<a></a>
+					</td>	
+					
+					<td>
+						<a></a>
+					</td>		
+				</tr>
+				<tr valign="top">
+					<td>
+						<ul>
+							<li>ToDo 1</li>
+							<li>ToDo 2</li>
+							<li>ToDo 3</li>
+						</ul>
+					</td>
+					<td>
+						<ul>
+							<li>ToDo description...</li>
+							<li>ToDo description...</li>
+							<li>ToDo description...</li>
+						</ul>
+					</td>
+					<td>
+						<ul>
+							<li><a>View</a></li>
+							<li><a>View</a></li>
+							<li><a>View</a></li>
+						</ul>
+					</td>
+					<td>
+						<ul>
+							<li><a>Remove</a></li>
+							<li><a>Remove</a></li>
+							<li><a>Remove</a></li>
+						</ul>
+					</td>
+					<td>
+						<input type="text" style="height:20px; width:100px"></br>
+						<input type="button" value="Add Short Term ToDo"></br></br>
+						
+						<input type="text" style="height:20px; width:100px"></br>
+						<input type="button" value="Add Mid Term ToDo"></br></br>
+						
+						<input type="text" style="height:20px; width:100px"></br>
+						<input type="button" value="Add Long Term ToDo"></br></br>
+					</td>
+				</tr>
+			</table>
+			</section>
+			<section>
 				<table border="2" bordercolor= "cyan" cellpadding="10">
 					<caption><p>Menu</p></caption>
 					<tr>		
 					<td bgcolor= "cyan"><p>TO DO LIST</p></td>
-					<article class="List">
-							<p>Short term</p>
-							<input type="text" style="height:20px; width:247px"></br>
-							<input type="button" value="Add new TODO" style="height:25px; width:251px"></br></br>
-							<p>Middle term</p>
-							<input type="text" style="height:20px; width:247px"></br>
-							<input type="button" value="Add new TODO" style="height:25px; width:251px"></br></br>
-							<p>Long term</p>
-							<input type="text" style="height:20px; width:247px"></br>
-							<input type="button" value="Add new TODO" style="height:25px; width:251px"></br></br>
-							
-							
-					</article>
 					</tr>
 					<tr>
 					<td><a href="MyCallendar.html"><font color="black"><p>My Callendar</p></font></a></td>
@@ -41,7 +92,7 @@
 					</tr>
 			
 				</table>
-				
+			</section>	
 				
 			</nav>
 		
