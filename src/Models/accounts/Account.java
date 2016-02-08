@@ -1,9 +1,9 @@
-package appObjects.accounts;
+package Models.accounts;
 
 
 import Exceptions.AccountException;
 import Interfaces.IAccount;
-import appObjects.User;
+import Models.User;
 
 import java.math.BigDecimal;
 import java.util.Currency;

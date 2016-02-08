@@ -1,7 +1,7 @@
-package appObjects.accounts;
+package Models.accounts;
 
 
-import appObjects.User;
+import Models.User;
 
 import java.math.BigDecimal;
 import java.util.Currency;

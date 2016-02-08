@@ -1,8 +1,7 @@
-package appObjects.tasks;
+package Models.tasks;
 
 
 import Interfaces.IShoppingEntry;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

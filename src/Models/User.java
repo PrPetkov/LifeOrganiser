@@ -1,17 +1,15 @@
-package appObjects;
+package Models;
 
 
 import Interfaces.ITODO;
-import appObjects.accounts.Account;
-import appObjects.tasks.TODOTask;
-import appObjects.tasks.Task;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import Models.accounts.Account;
+import Models.tasks.Task;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 public class User {
+    private Database db;
 
     private String userName;
     private String password;
@@ -24,17 +22,18 @@ public class User {
     
 //    Money money;
 
-    private User(){
 
+    private User() {
+        this.tasks = new ArrayList<>();
+        this.accounts = new ArrayList<>();
+        this.todos = new ArrayList<>();
+        this.db = new Database(this);
     }
 
-	private User(String userName, String password) {
-		this.tasks = new ArrayList<>();
-		this.accounts = new ArrayList<>();
-		this.todos = new ArrayList<>();
-
+    private User(String userName) {
+		this();
 		setUserName(userName);
-		setPassword(password);
+//		setPassword(password);
 	}
 
     public static User getUser(){
@@ -94,4 +93,11 @@ public class User {
         return true;
 	}
 
+	public void downloadInfoFromDb(){
+    //TODO
+    }
+
+    public void uploadInfoToDb(){
+        //TODO
+    }
 }

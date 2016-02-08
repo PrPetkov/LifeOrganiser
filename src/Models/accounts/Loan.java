@@ -1,13 +1,12 @@
-package appObjects.accounts;
+package Models.accounts;
 
 
-import appObjects.User;
-import appObjects.tasks.PayTask;
+import Models.User;
+import Models.tasks.PayTask;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Currency;
-import java.util.Date;
 
 public class Loan extends CreditAccount {
 

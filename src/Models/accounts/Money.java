@@ -1,6 +1,4 @@
-package appObjects.accounts;
-
-import appObjects.accounts.Account;
+package Models.accounts;
 
 import java.math.BigDecimal;
 

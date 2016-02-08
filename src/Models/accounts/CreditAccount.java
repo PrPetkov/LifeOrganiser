@@ -1,9 +1,7 @@
-package appObjects.accounts;
+package Models.accounts;
 
 
 import Exceptions.AccountException;
-import appObjects.User;
-import appObjects.tasks.PayTask;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
