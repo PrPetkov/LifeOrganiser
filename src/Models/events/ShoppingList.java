@@ -7,6 +7,7 @@ public class ShoppingList{
 
 	private double isPaid;
 	private double amount;
+	//I'm not sure that Entry of ArrayList will work.	
     private ArrayList<Entry<String,Double>> entries;
 
     public ShoppingList(){
