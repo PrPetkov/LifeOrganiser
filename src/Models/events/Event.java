@@ -1,12 +1,30 @@
 package Models.tasks;
 
+public abstract class Event{
 
-import java.time.LocalDateTime;
-
-public class Event extends Task {
-
-    public Event(String taskName, LocalDateTime date){
-        super(taskName, date);
-    }
+   private String title;
+   private String description;
+   
+   Event(String title, String description){
+	   this.setTitle(title);
+	   this.setDescription(description) = description;
+   }
+   
+   public String getTitle(){
+	   return this.title;
+   }
+   
+   public String getDescription(){
+	   return this.description;
+   }
+   
+   private setTitle(String title){
+	   this.title = title;
+   }
+   
+   private setDescription(String description){
+	   this.description = description;
+   }
+   
 
 }

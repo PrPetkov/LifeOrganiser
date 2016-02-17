@@ -1,41 +1,63 @@
 package Models.tasks;
 
-
-import Interfaces.IShoppingEntry;
-
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
-public class ShoppingList extends Task {
+public class ShoppingList{
 
-    private List<IShoppingEntry> entries;
+	private double isPaid;
+	private double amount;
+    private ArrayList<Entry<String,Double>> entries;
 
-    public ShoppingList(String taskName, LocalDateTime date){
-        super(taskName, date);
-
-        this.entries = new ArrayList<IShoppingEntry>();
-
+    public ShoppingList(){
+    	this.amount = 0;
+    	this.isPaid = false;
+    	this.entries = new ArrayList<Entry<String,Double>>();
     }
 
-    public void addEntry(IShoppingEntry entry){
-        if (entry == null){
-            return;
+    public void addEntry(String name,Double amount){
+       try{
+    	if (this.setEntryAmount(amount)){
+    		this.entries.add(new Entry(name,amount));
         }
-
-        this.entries.add(entry);
+       }catch(/*validateExeption e*/){
+    	   //e.getMessage();
+       }
+   
     }
 
-    public void removeEntry(IShoppingEntry entry){
-        if (entry == null){
-            return;
+    public void removeEntry(String name){
+        if (this.entries.contains(name)){
+        	this.entries.remove(name);
         }
-
-        this.entries.remove(entry);
+    }
+    
+    private boolean setEntryAmount(double amount){
+    	if(amount < 0){
+    		//throw ValidateExeption
+    	}
+    	return true;
     }
 
     public Iterable<IShoppingEntry> getShoppingListEnties(){
         return this.entries;
+    }
+    
+    //calculate amount for friendly message to user
+    public double getAmountOfAllEntries(){
+    	//for amount += getValue();
+    	return amount;
+    }
+    
+    public double setAmountOfShoppingList(double amount){
+    	if(this.amount > 0)
+    		this.amount = amount;
+    	else
+    		//trow ValidateExeption
+    }
+    
+    public boolean getIsPaid(){
+    	return this.isPaid;
     }
 
 }
