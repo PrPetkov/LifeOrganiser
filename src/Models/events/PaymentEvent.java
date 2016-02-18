@@ -16,8 +16,8 @@ public class PaymentEvent extends Event{
         //this.date = date;
         try{
         	this.setAmount(amount);
-        }catch(/* ValidateExeption  e*/){
-        	//e.getMessage
+        }catch(IllegalAmountExeption e){
+        	e.getMessage
         }
     }
 
@@ -38,7 +38,7 @@ public class PaymentEvent extends Event{
         if(amount != null && (amount >= 0){
         	this.ammount = ammount;
         }else{
-        	//throw new ValidateExeption	
+        	throw new IllegalAmountExeption("Amoun of your payment must be positive !");	
         }
     }
     

@@ -7,22 +7,21 @@ public class ShoppingList{
 
 	private double isPaid;
 	private double amount;
-	//I'm not sure that Entry of ArrayList will work.	
-    private ArrayList<Entry<String,Double>> entries;
+    private HashMap<String,Double> entries;
 
     public ShoppingList(){
     	this.amount = 0;
     	this.isPaid = false;
-    	this.entries = new ArrayList<Entry<String,Double>>();
+    	this.entries = new HashMap<String,Double>();
     }
 
     public void addEntry(String name,Double amount){
        try{
     	if (this.setEntryAmount(amount)){
-    		this.entries.add(new Entry(name,amount));
+    		this.entries.add(name,amount);
         }
-       }catch(/*validateExeption e*/){
-    	   //e.getMessage();
+       }catch(IllegalAmounExeption e){
+    	   	e.getMessage();
        }
    
     }
@@ -35,7 +34,7 @@ public class ShoppingList{
     
     private boolean setEntryAmount(double amount){
     	if(amount < 0){
-    		//throw ValidateExeption
+    		throw new IllegalAmountExeption("Invalid value of entry !");
     	}
     	return true;
     }
@@ -44,17 +43,20 @@ public class ShoppingList{
         return this.entries;
     }
     
-    //calculate amount for friendly message to user
     public double getAmountOfAllEntries(){
-    	//for amount += getValue();
-    	return amount;
+    	double currentAmountOfList;
+    	for(Map.Entry<String, Integer> map : this.entries){
+    		int value = map.getValue();
+    		currentAmountOfList += value;
+    	}
+    	return currentAmountOfList;
     }
     
     public double setAmountOfShoppingList(double amount){
     	if(this.amount > 0)
     		this.amount = amount;
     	else
-    		//trow ValidateExeption
+    		throw new IllegalAmountexeption("The amount must be positive !");
     }
     
     public boolean getIsPaid(){
