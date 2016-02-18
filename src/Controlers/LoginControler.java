@@ -1,18 +1,7 @@
-package Controlers;
-
-
-import Models.User;
+package controlers;
 
 public class LoginControler {
 
-    public boolean logIn(String usserName, String password){
-        if (User.isValidUser(usserName, password)){
-            User.getUser().downloadInfoFromDb();
 
-            return true;
-        }
-
-        return false;
-    }
 
 }

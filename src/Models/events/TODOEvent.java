@@ -1,8 +1,8 @@
-package Models.tasks;
+package models.events;
 
-public class TODOEvent extends Event{
+public class TODOEvent extends Event {
 	
-	Event(String name,String description){
+	TODOEvent(String name,String description){
 		super(name,description);
 	}
 

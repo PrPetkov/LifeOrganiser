@@ -1,17 +1,18 @@
+package models.exceptions;
 
-public class IllegalAmountExeption extends Thread{
+public class IllegalAmountExeption extends Exception {
 	
-	public IllegalAmountExeption();
+	public IllegalAmountExeption() {};
 	
-	public IllegalAmountExeption(String text){
+	public IllegalAmountExeption(String text) {
 		super(text);
 	}
 	
-	public IllegalAmountExeption(String text, Throwable couse){
+	public IllegalAmountExeption(String text, Throwable couse) {
         super(text, couse);
     }
 
-    public IllegalAmountExeption(Throwable couse){
+    public IllegalAmountExeption(Throwable couse) {
         super(couse);
     }
 

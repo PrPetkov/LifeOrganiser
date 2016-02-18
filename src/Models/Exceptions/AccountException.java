@@ -1,4 +1,4 @@
-package Exceptions;
+package models.exceptions;
 
 
 public class AccountException extends Exception {

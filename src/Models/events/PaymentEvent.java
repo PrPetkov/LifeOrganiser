@@ -1,47 +1,51 @@
-package Models.tasks;
+package models.events;
 
-public class PaymentEvent extends Event{
+import models.exceptions.IllegalAmountException;
 
-	//LocalDate 
+public class PaymentEvent extends Event {
+
+	//LocalDate forDate - for witch date is the current event
 	private double amount;
 	private boolean isIncome;
 	private boolean isPaid;
 	private boolean isOverdue;
 	
-	public PaymentEvent(String eventTitle,String description, Date, double amount, boolean isIncome, boolean isPaid) {
+	public PaymentEvent(String eventTitle,String description, double amount, boolean isIncome, boolean isPaid) throws IllegalAmountException {
         super(eventTitle, description);
-        this.isIncome(isIncome);
-        this.isOverdue = false;
+        this.isIncome = isIncome;
+        this.isOverdue = checkIfOverdue();
         this.isPaid = isPaid;
-        //this.date = date;
-        try{
-        	this.setAmount(amount);
-        }catch(IllegalAmountExeption e){
-        	e.getMessage
+        // this.forDate = SOME PICKED DATE FROM THE USER
+        
+        setAmount(amount);
+    }
+
+
+	// methods
+    private boolean checkIfOverdue() {
+		if (this.isPaid == false /* && CURRENT DATE > forDate */) {
+			
+		}
+		return false;
+	}
+
+    private void setAmount(Double amount) throws IllegalAmountException {
+        if (amount != null && amount >= 0) {
+        	this.amount = amount;
+        } else {
+        	throw new IllegalAmountException("The entered amount for your payment must be positive!");	
         }
     }
-
-
-    public double getAmmount() {
-        return this.amount;
-    }
     
-    private void setIsIncome(boolean IsIncome){
-    	this.isIncome = isIncome;
+    // getters and setters
+	public double getAmount() {
+        return this.amount;
     }
     
     public boolean getIsIncome(){
     	return this.isIncome;
     }
 
-    private void setAmount(Double amount) {
-        if(amount != null && (amount >= 0){
-        	this.ammount = ammount;
-        }else{
-        	throw new IllegalAmountExeption("Amoun of your payment must be positive !");	
-        }
-    }
-    
     public boolean getIsOverdue(){
     	return this.isOverdue;
     }

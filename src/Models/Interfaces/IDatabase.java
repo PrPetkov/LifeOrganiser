@@ -1,4 +1,4 @@
-package Interfaces;
+package models.interfaces;
 
 
 public interface IDatabase {

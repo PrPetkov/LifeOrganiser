@@ -1,14 +1,13 @@
-package Models.accounts;
+package models.accounts;
 
 
-import Exceptions.AccountException;
-import Interfaces.IAccount;
-import Models.User;
+import models.exceptions.AccountException;
+import models.User;
 
 import java.math.BigDecimal;
 import java.util.Currency;
 
-public abstract class Account implements IAccount {
+public abstract class Account {
 	
 	private String accountName;
 	private Currency currency;
