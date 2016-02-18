@@ -66,11 +66,6 @@ public class ShoppingList {
 		}
 	}
 	
-	// TODO
-	public void payShoppingList() {
-		
-	}
-	
 	// getters and setters
 	boolean getIsPaid() {
 		return this.isPaid;
