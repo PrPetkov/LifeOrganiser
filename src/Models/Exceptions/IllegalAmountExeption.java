@@ -7,11 +7,12 @@ public class IllegalAmountExeption extends Thread{
 		super(text);
 	}
 	
-	public AccountException(String text, Throwable couse){
+	public IllegalAmountExeption(String text, Throwable couse){
         super(text, couse);
     }
 
-    public AccountException(Throwable couse){
+    public IllegalAmountExeption(Throwable couse){
         super(couse);
     }
+
 }
