@@ -1,9 +1,13 @@
 package models;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import models.events.TODOEvent;
+import models.exceptions.IllegalAmountException;
+import models.exceptions.IncorrectInputException;
+import models.exceptions.NotExistException;
 import models.events.Event;
 import models.events.PaymentEvent;
 import models.events.ShoppingList;
@@ -30,24 +34,64 @@ public class User {
 		// this.db = new Database(this);
 	}
 
+	
 	// methods
-	
 	/*-------------PAYMENT EVENT-------------*/
-	// TODO
-	public void createPaymentEvent() {
-
+	public void createPaymentEvent(String eventTitle, String description, double amount, boolean isIncome, boolean isPaid, LocalDate forDate) throws IllegalAmountException {
+		/*
+		 * amount is checked in the OOP in the PaymentEvent class
+		 * isIncome will be button (radio?) and will be a must to continue - no need for check in the OOP
+		 * isPayed will be button (radio?) and will be a must to continue - no need for check in the OOP
+		 * forDate will be chooser from the calendar and and will be a must to continue - no need for check in the OOP
+		 */
+		if (eventTitle == null || eventTitle.trim().isEmpty()) {
+			try {
+				throw new IncorrectInputException("The input name must not be empty!");
+			} catch (IncorrectInputException e) {}
+		} else if (description == null || description.trim().isEmpty()) {
+			try {
+				throw new IncorrectInputException("The input description must not be empty!");
+			} catch (IncorrectInputException e) {}
+		} 
+		
+		this.events.add(new PaymentEvent(eventTitle, description, amount, isIncome, isPaid, forDate));
 	}
 	
-	// TODO
-	public void modifyPaymentEvent(PaymentEvent event) {
+	public void modifyPaymentEvent(PaymentEvent event, String eventTitle, String description, double amount, boolean isIncome, boolean isPaid, LocalDate forDate) {
+		/*
+		 * amount is checked in the OOP in the PaymentEvent class
+		 * isIncome will be button (radio?) and will be a must to continue - no need for check in the OOP
+		 * isPayed will be button (radio?) and will be a must to continue - no need for check in the OOP
+		 * forDate will be chooser from the calendar and and will be a must to continue - no need for check in the OOP
+		 */
+		if (eventTitle == null || eventTitle.trim().isEmpty()) {
+			try {
+				throw new IncorrectInputException("The input name must not be empty!");
+			} catch (IncorrectInputException e) {}
+		} else if (description == null || description.trim().isEmpty()) {
+			try {
+				throw new IncorrectInputException("The input description must not be empty!");
+			} catch (IncorrectInputException e) {}
+		} 
 		
+		event.setTitle(eventTitle);
+		event.setDescription(description);
+		event.setAmount(amount);
+		event.setIncome(isIncome);
+		event.setPaid(isPaid);
+		event.setForDate(forDate);
 	}
 
-	// TODO
 	public void removePaymentEvent(PaymentEvent event) {
-		
+		if (event == null) {
+			try {
+				throw new NotExistException();
+			} catch (NotExistException e) {}
+		}
+		this.events.remove(event);
 	}
 	
+	// TODO
 	public void pay(PaymentEvent event) {
 		
 	}

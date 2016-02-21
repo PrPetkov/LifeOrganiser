@@ -1,30 +1,31 @@
 package models.events;
 
+import java.time.LocalDate;
+
 import models.exceptions.IllegalAmountException;
 
 public class PaymentEvent extends Event {
 
-	//LocalDate forDate - for witch date is the current event
 	private double amount;
 	private boolean isIncome;
 	private boolean isPaid;
 	private boolean isOverdue;
+	private LocalDate forDate;
 	
-	public PaymentEvent(String eventTitle,String description, double amount, boolean isIncome, boolean isPaid) throws IllegalAmountException {
+	public PaymentEvent(String eventTitle,String description, double amount, boolean isIncome, boolean isPaid, LocalDate forDate) throws IllegalAmountException {
         super(eventTitle, description);
         this.isIncome = isIncome;
         this.isOverdue = checkIfOverdue();
         this.isPaid = isPaid;
-        // this.forDate = SOME PICKED DATE FROM THE USER
-        
+        this.forDate = forDate;
         setAmount(amount);
     }
 
 
 	// methods
     private boolean checkIfOverdue() {
-		if (this.isPaid == false /* && CURRENT DATE > forDate */) {
-			
+		if (this.isPaid == false && this.forDate.isAfter(LocalDate.now())) {
+			return true;
 		}
 		return false;
 	}
@@ -53,5 +54,35 @@ public class PaymentEvent extends Event {
     public boolean getIsPaid(){
     	return this.isPaid;
     }
+
+
+	public LocalDate getForDate() {
+		return forDate;
+	}
+
+
+	public void setForDate(LocalDate forDate) {
+		this.forDate = forDate;
+	}
+
+
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
+
+	public void setIncome(boolean isIncome) {
+		this.isIncome = isIncome;
+	}
+
+
+	public void setPaid(boolean isPaid) {
+		this.isPaid = isPaid;
+	}
+
+
+	public void setOverdue(boolean isOverdue) {
+		this.isOverdue = isOverdue;
+	}
     
 }
