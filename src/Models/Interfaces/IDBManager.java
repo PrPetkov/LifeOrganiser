@@ -1,4 +1,4 @@
-package Models.Interfaces;
+package models.interfaces;
 
 /**
  * Created by Pipi on 21.2.2016 г..

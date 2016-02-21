@@ -27,9 +27,19 @@ description VARCHAR(255),
 FOREIGN KEY (user_id) REFERENCES lo.users(user_id)
 );
 
+CREATE TABLE lo.notification_events (
+ne_id int PRIMARY KEY AUTO_INCREMENT,
+user_id int NOT NULL,
+ne_name VARCHAR(25) NOT NULL,
+description VARCHAR(255), 
+for_date DATE NOT NULL,
+FOREIGN KEY (user_id) REFERENCES lo.users(user_id)
+);
+
 CREATE TABLE lo.shopping_lists (
 pe_id int PRIMARY KEY AUTO_INCREMENT,
 list_id int NOT NULL,
+list_name VARCHAR(25) NOT NULL,
 item_name VARCHAR(100) NOT NULL,
 item_value DOUBLE PRECISION,
 user_id int NOT NULL,

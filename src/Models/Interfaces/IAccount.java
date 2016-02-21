@@ -1,6 +1,6 @@
 package models.interfaces;
 
-import Models.user.User;
+import models.user.User;
 
 import java.math.BigDecimal;
 import java.util.Currency;

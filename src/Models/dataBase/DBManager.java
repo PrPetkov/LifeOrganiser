@@ -1,6 +1,6 @@
-package Models.dataBase;
+package models.dataBase;
 
-import Models.Interfaces.IDBManager;
+import models.interfaces.IDBManager;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

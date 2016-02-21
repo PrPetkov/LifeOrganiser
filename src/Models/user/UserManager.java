@@ -1,8 +1,8 @@
-package Models.user;
+package models.user;
 
 //import com.example.lifeorganiser.src.Models.dataBase.DBAdapter;
 
-import Models.Interfaces.IDBManager;
+import models.interfaces.IDBManager;
 
 public class UserManager {
 

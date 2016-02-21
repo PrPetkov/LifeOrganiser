@@ -1,24 +1,29 @@
 package models.events;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import models.exceptions.IllegalAmountException;
 
 public class ShoppingList {
-
+	
+	private String name;
 	private boolean isPaid;
 	private double amount;
 	private HashMap<String, Double> entries;
 
-	public ShoppingList() {
+	public ShoppingList(String name) {
+		this.name = name;
 		this.amount = 0;
 		this.isPaid = false;
 		this.entries = new HashMap<String, Double>();
 	}
 
 	// methods
+	public void addEntry(String name){
+		this.entries.put(name, amount);
+	}
+	
 	public void addEntry(String name, Double amount) throws IllegalAmountException {
 		if (setEntryAmount(amount)) {
 			this.entries.put(name, amount);
@@ -71,8 +76,16 @@ public class ShoppingList {
 		return this.isPaid;
 	}
 
-	HashMap<String, Double> getEntries() {
+	public HashMap<String, Double> getEntries() {
 		return entries;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 }
