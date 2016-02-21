@@ -1,4 +1,6 @@
-package models;
+package Models.dataBase;
+
+import Models.Interfaces.IDBManager;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,7 +12,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-public class DBManager {
+public class DBManager implements IDBManager {
 
 	public static void main(String[] args) {
 		

@@ -1,4 +1,4 @@
-package models;
+package Models.user;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -8,7 +8,6 @@ import models.events.TODOEvent;
 import models.exceptions.IllegalAmountException;
 import models.exceptions.IncorrectInputException;
 import models.exceptions.NotExistException;
-import models.events.Event;
 import models.events.PaymentEvent;
 import models.events.ShoppingList;
 

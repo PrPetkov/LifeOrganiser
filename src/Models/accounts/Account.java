@@ -2,7 +2,7 @@ package models.accounts;
 
 
 import models.exceptions.AccountException;
-import models.User;
+import Models.user.User;
 
 import java.math.BigDecimal;
 import java.util.Currency;
