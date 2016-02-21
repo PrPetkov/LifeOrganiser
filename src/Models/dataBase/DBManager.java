@@ -20,9 +20,10 @@ public class DBManager implements IDBManager {
 
 	static Connection conn = null;
 	static Statement stmt = null;
-	   
-	public static void main(String[] args) {
-		
+	
+	private static DBManager instance = null;
+	
+	private DBManager() {
 		try {
 			Class.forName(JDBC_DRIVER);
 			System.out.println("Driver loaded successfully");
@@ -32,7 +33,13 @@ public class DBManager implements IDBManager {
 		
 		createSchema();
 		addTablesToSchema();
-		
+	}
+	
+	public static DBManager getInstance() {
+		if(instance == null) {
+	         instance = new DBManager();
+	      }
+	      return instance;
 	}
 		
 	private static void addTablesToSchema() {
