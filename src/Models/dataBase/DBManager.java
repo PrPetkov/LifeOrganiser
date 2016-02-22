@@ -161,7 +161,7 @@ public class DBManager implements IDBManager {
 	private void createSchema(Connection conn) {
 		try {
 			
-			if(!doesSchemaExists(conn)) {
+			if(doesSchemaExists(conn)) {
 				System.out.println("Schema already exists!");
 				return;
 			}
