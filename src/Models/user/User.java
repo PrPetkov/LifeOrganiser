@@ -20,7 +20,7 @@ public class User {
 	private String userName;
 	private String password;
 	private String email;
-	private final int uniqueDBId;
+	private int uniqueID;
 
 	private List<PaymentEvent> events;
 	private List<TODOEvent> todos;
@@ -31,10 +31,11 @@ public class User {
 	private static User user;
 	private BigDecimal money;
 
-	public User(String userName, String password, int uniqueDBId, String email) {
+	// calls the constructor when getting the users from the DB
+	public User(String userName, int uniqueID, String password, String email) {
 		this.setUserName(userName);
 		this.setPassword(password);
-		this.uniqueDBId = uniqueDBId;
+		this.uniqueID = uniqueID;
 		this.email = email;
 
 		this.events = new ArrayList<>();
@@ -42,6 +43,13 @@ public class User {
 		this.todos = new ArrayList<>();
 		this.shoppingList = new ArrayList<>();
 		this.notifications = new ArrayList<>();
+	}
+	
+	// calls the constructor when registering new user
+	public User(String userName, String password, String email) {
+		this.setUserName(userName);
+		this.setPassword(password);
+		this.email = email;
 	}
 
 	// methods
@@ -391,7 +399,7 @@ public class User {
 	}
 
 	public int getUniqueDBId() {
-		return uniqueDBId;
+		return uniqueID;
 	}
 
 	public List<ShoppingList> getShoppingList() {
