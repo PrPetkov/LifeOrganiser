@@ -22,7 +22,7 @@ public class DBManager implements IDBManager {
 	Connection conn = null;
 	Statement stmt = null;
 	
-	private DBManager instance = null;
+	private static DBManager instance = null;
 	
 	private DBManager() {
 		try {
@@ -53,7 +53,7 @@ public class DBManager implements IDBManager {
 		}
 	}
 	
-	public DBManager getInstance() {
+	public static DBManager getInstance() {
 		if(instance == null) {
 	         instance = new DBManager();
 	      }
@@ -102,6 +102,10 @@ public class DBManager implements IDBManager {
 		} catch (SQLException e) {
 			System.out.println("Creation of schema failed: " + e.getMessage());
 		}	
+	}
+
+	public Connection getConnection() {
+		return conn;
 	}
 
 }
