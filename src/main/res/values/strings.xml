@@ -1,0 +1,48 @@
+<resources>
+    <string name="app_name">LifeOrganiser</string>
+    <string name="title_activity_today">TodayActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="username">username</string>
+    <string name="password">password</string>
+    <string name="logIn">log in</string>
+    <string name="signUp">sign up</string>
+    <string name="forgottenPW">forgotten password</string>
+    <string name="email">email</string>
+    <string name="todoList">TODO list</string>
+    <string name="calendar">Calendar</string>
+    <string name="tasks">Tasks</string>
+    <string name="account">Accounts</string>
+    <string name="shoppingLists">Shopping list</string>
+    <string name="today">Today</string>
+    <string name="hello">Hello,</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="what">What?</string>
+    <string name="event_name">Event name</string>
+    <string name="when">When?</string>
+    <string name="why">Why?</string>
+    <string name="event_description">event description</string>
+    <string name="is_payable">is payable?</string>
+    <string name="income">income</string>
+    <string name="expenses">expenses</string>
+    <string name="how_much">How much?</string>
+    <string name="amount">amount</string>
+    <string name="edit">edit</string>
+    <string name="shortTermGoals">Short term goals</string>
+    <string name="midTermGoals">Mid term goals</string>
+    <string name="longTermGoals">Long term goals</string>
+    <string name="add">add +</string>
+    <string name="goal">goal</string>
+    <string name="how">How?</string>
+    <string name="optional_description">optional description</string>
+    <string name="accounts">Accounts</string>
+    <string name="howMuch">How much?</string>
+    <string name="accountName">account name</string>
+    <string name="withdraw">withdraw -</string>
+    <string name="history">History</string>
+</resources>
