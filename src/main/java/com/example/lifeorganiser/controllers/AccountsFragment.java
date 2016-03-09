@@ -33,7 +33,7 @@ public class AccountsFragment extends Fragment {
 
         this.accountsView = (ListView) v.findViewById(R.id.accountsListView);
 
-        ArrayList<DebitAccount> debitAccounts = this.userManager.getDebitAccounts();
+        final ArrayList<DebitAccount> debitAccounts = this.userManager.getDebitAccounts();
         final ArrayList<String> debitAccountStrings = new ArrayList<>();
 
         for (DebitAccount account : debitAccounts){
@@ -59,6 +59,9 @@ public class AccountsFragment extends Fragment {
                     addFragment.show(fm, "addAccount");
                 } else {
                     AccountViewFragment viewFragment = new AccountViewFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("account", debitAccounts.get(position));
+                    viewFragment.setArguments(bundle);
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
                     transaction.replace(R.id.fragmentLayout, viewFragment);

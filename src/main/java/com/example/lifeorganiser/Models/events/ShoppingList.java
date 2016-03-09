@@ -2,7 +2,6 @@ package com.example.lifeorganiser.src.Models.events;
 
 import com.example.lifeorganiser.src.Models.Exceptions.IllegalAmountException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,18 +9,18 @@ public class ShoppingList {
 
 	private boolean isPaid;
 	private double amount;
-	private HashMap<String, Double> entries;
+	private HashMap<String, Double> shoppingEntries;
 
 	public ShoppingList() {
 		this.amount = 0;
 		this.isPaid = false;
-		this.entries = new HashMap<String, Double>();
+		this.shoppingEntries = new HashMap<String, Double>();
 	}
 
 	// methods
-	public void addEntry(String name, Double amount) throws IllegalAmountException {
+	public void addEntry(String name, Double amount) {
 		if (setEntryAmount(amount)) {
-			this.entries.put(name, amount);
+			this.shoppingEntries.put(name, amount);
 		}
 	}
 	
@@ -39,15 +38,15 @@ public class ShoppingList {
 	}
 
 	public void removeEntry(String name) {
-		if (this.entries.containsKey(name)) {
-			this.entries.remove(name);
+		if (this.shoppingEntries.containsKey(name)) {
+			this.shoppingEntries.remove(name);
 		}
 	}
 
 	public double getAmountOfAllEntries() {
 		double currentAmountOfList = 0;
 		
-		for (Map.Entry<String, Double> map : this.entries.entrySet()) {
+		for (Map.Entry<String, Double> map : this.shoppingEntries.entrySet()) {
 			if (map.getKey() == null) {
 				continue;
 			}
@@ -71,8 +70,8 @@ public class ShoppingList {
 		return this.isPaid;
 	}
 
-	HashMap<String, Double> getEntries() {
-		return entries;
+	HashMap<String, Double> getShoppingEntries() {
+		return shoppingEntries;
 	}
 
 }

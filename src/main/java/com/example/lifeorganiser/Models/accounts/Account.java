@@ -13,12 +13,13 @@ public abstract class Account {
 	private String accountName;
 	protected double amount;
 	private ArrayList<PaymentEvent> paymentHistory;
+    private int dbUid;
 
-	public Account(String accountName, double amount) {
+	public Account(String accountName, double amount, int dbUid) {
         this.paymentHistory = new ArrayList<>();
 		this.setAccountName(accountName);
 		this.amount = amount;
-
+        this.dbUid = dbUid;
 	}
 
     public ArrayList<PaymentEvent> getPaymentHistory() {
@@ -38,8 +39,12 @@ public abstract class Account {
             this.accountName = accountName;
         }
 	}
-	
-	public String getAccountName() {
+
+    public int getDbUid() {
+        return dbUid;
+    }
+
+    public String getAccountName() {
 		return this.accountName;
 	}
 

@@ -76,8 +76,6 @@ public class TasksFragment extends android.app.Fragment {
                     return;
                 }
 
-                //TODO start task view
-
                 Event clickedEvent = events.get(position);
 
                 Bundle eventBundle = new Bundle();

@@ -1,6 +1,9 @@
 package com.example.lifeorganiser.src.Models.user;
 
+import android.widget.Toast;
+
 import com.example.lifeorganiser.src.Models.Exceptions.DBManagerException;
+import com.example.lifeorganiser.src.Models.Exceptions.IllegalAmountException;
 import com.example.lifeorganiser.src.Models.Exceptions.UserManagerException;
 import com.example.lifeorganiser.src.Models.Interfaces.IDBManager;
 import com.example.lifeorganiser.src.Models.accounts.Account;
@@ -11,9 +14,11 @@ import com.example.lifeorganiser.src.Models.events.Event;
 import com.example.lifeorganiser.src.Models.events.NotificationEvent;
 import com.example.lifeorganiser.src.Models.events.PaymentEvent;
 import com.example.lifeorganiser.src.Models.events.TODOEvent;
+import com.example.lifeorganiser.src.controllers.AccountViewFragment;
 import com.example.lifeorganiser.src.controllers.LogInActivity;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,22 +56,32 @@ public class UserManager {
         return tasks;
     }
 
-    public void addEvent(DatedEvent event){
+    public ArrayList<PaymentEvent> getAccountHistory(int accountId){
+        return this.dbManager.getPaymentEvents(this.user.getId(), accountId);
+    }
+
+    public void addEvent(PaymentEvent event, int accountId){
         this.user.addEvent(event);
 
-        if (event instanceof PaymentEvent){
-            this.dbManager.addPaymentEvent(this.user.getId(),
-                    event.getTitle(),
-                    event.getDescription(),
-                    ((PaymentEvent)event).getAmount(),
-                    ((PaymentEvent)event).getIsPaid(),
-                    event.getDateTime());
-        }else if (event instanceof NotificationEvent){
-            this.dbManager.addNotificationEvent(this.user.getId(),
-                    event.getTitle(),
-                    event.getDescription(),
-                    event.getDateTime());
-        }
+
+        this.dbManager.addPaymentEvent(this.user.getId(),
+                accountId,
+                event.getTitle(),
+                event.getDescription(),
+                event.getAmount(),
+                event.getIsPaid(),
+                event.getDateTime());
+
+    }
+
+    public void addEvent(NotificationEvent event){
+        this.user.addEvent(event);
+
+        this.dbManager.addNotificationEvent(this.user.getId(),
+                event.getTitle(),
+                event.getDescription(),
+                event.getDateTime());
+
     }
 
     public String getUsername(){
@@ -80,6 +95,10 @@ public class UserManager {
             this.user = this.dbManager.getUser(username, cryptedPassword);
         } catch (DBManagerException e) {
             throw new UserManagerException(e.getMessage(), e);
+        }
+
+        if (this.getDebitAccounts().size() == 0){
+            this.addDebitAccounts("Default account", 0);
         }
     }
 
@@ -125,13 +144,56 @@ public class UserManager {
     }
 
     public ArrayList<DebitAccount> getDebitAccounts(){
-        //TODO DB
+        if (this.user.getDebitAccounts().size() == 0){
+            this.user.getDebitAccounts().addAll(this.dbManager.getAllDebitAccounts(this.user.getId()));
+        }
         return this.user.getDebitAccounts();
     }
 
-    public void addDebitAccounts(DebitAccount account){
-        //TODO DB
+    public void addDebitAccounts(String name, double amount) throws UserManagerException {
+
+        this.dbManager.addDebitAccount(this.user.getId(), name, amount);
+
+        DebitAccount account = null;
+        try {
+            account = this.dbManager.getDebitAccount(this.user.getId(), name, amount);
+        } catch (DBManagerException e) {
+            throw new UserManagerException("Account not saved", e);
+        }
+
         this.user.addDebitAccount(account);
+    }
+
+    public void withdrawMoney(Account account, double amount) throws UserManagerException {
+        try {
+            this.addEvent(new PaymentEvent("Withdraw money",
+                    "Auto generated event",
+                    amount,
+                    false, true,
+                    Calendar.getInstance()), account.getDbUid());
+
+            account.withdrawMoney(amount);
+        } catch (IllegalAmountException e) {
+            throw new UserManagerException("Account not saved", e);
+        }
+
+        this.dbManager.updateAccount(account.getAccountName(), account.getAmount(), account.getDbUid());
+    }
+
+    public void addMoney(Account account, double amount) throws UserManagerException {
+        try {
+           this.addEvent(new PaymentEvent("Add money",
+                    "Auto generated event",
+                    amount,
+                    true, true,
+                    Calendar.getInstance()), account.getDbUid());
+
+            account.insertMoney(amount);
+        } catch (IllegalAmountException e) {
+            throw new  UserManagerException("The amount must be positive", e);
+        }
+
+        this.dbManager.updateAccount(account.getAccountName(), account.getAmount(), account.getDbUid());
     }
 
     private boolean validateEmail(String email){

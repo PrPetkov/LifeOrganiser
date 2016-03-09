@@ -9,8 +9,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.lifeorganiser.R;
+import com.example.lifeorganiser.src.Models.Exceptions.UserManagerException;
 import com.example.lifeorganiser.src.Models.accounts.DebitAccount;
 import com.example.lifeorganiser.src.Models.user.UserManager;
 
@@ -43,8 +45,11 @@ public class AddAccountDialogFragment extends DialogFragment {
                 String name = AddAccountDialogFragment.this.accountNameEditText.getText().toString();
                 double amount = Double.parseDouble(AddAccountDialogFragment.this.accountAmountEditText.getText().toString());
 
-                AddAccountDialogFragment.this.userManager.addDebitAccounts(
-                        new DebitAccount(name, amount));
+                try {
+                    AddAccountDialogFragment.this.userManager.addDebitAccounts(name, amount);
+                } catch (UserManagerException e) {
+                    Toast.makeText(getActivity().getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

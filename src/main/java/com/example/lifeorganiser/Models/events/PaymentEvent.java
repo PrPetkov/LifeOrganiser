@@ -6,7 +6,6 @@ import java.util.Calendar;
 
 public class PaymentEvent extends DatedEvent {
 
-	//LocalDate forDate - for witch date is the current event
 	private double amount;
 	private boolean isIncome;
 	private boolean isPaid;

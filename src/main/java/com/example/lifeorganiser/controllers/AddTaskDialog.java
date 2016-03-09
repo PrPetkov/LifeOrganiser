@@ -10,21 +10,25 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.lifeorganiser.R;
 import com.example.lifeorganiser.src.Models.Exceptions.IllegalAmountException;
+import com.example.lifeorganiser.src.Models.accounts.DebitAccount;
 import com.example.lifeorganiser.src.Models.events.NotificationEvent;
 import com.example.lifeorganiser.src.Models.events.PaymentEvent;
 import com.example.lifeorganiser.src.Models.user.UserManager;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class AddTaskDialog extends DialogFragment {
@@ -41,6 +45,7 @@ public class AddTaskDialog extends DialogFragment {
     private RadioButton incomeRadio;
     private RadioButton expensesRadio;
     private TextView howMuchText;
+    private Spinner spinner;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -60,6 +65,16 @@ public class AddTaskDialog extends DialogFragment {
         this.incomeRadio = (RadioButton) v.findViewById(R.id.incomeRadio);
         this.expensesRadio = (RadioButton) v.findViewById(R.id.expensesRadio);
         this.howMuchText = (TextView) v.findViewById(R.id.addTaskHowMuch);
+        this.spinner = (Spinner) v.findViewById(R.id.addTaskSpinner);
+
+        final ArrayList<DebitAccount> accounts = this.userManager.getDebitAccounts();
+        ArrayList<String> stringAccounts = new ArrayList<>();
+        for (DebitAccount account : accounts){
+            stringAccounts.add(account.getAccountName());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), R.layout.simple_listview_item, stringAccounts);
+        this.spinner.setAdapter(adapter);
 
         this.isPayable.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,10 +83,12 @@ public class AddTaskDialog extends DialogFragment {
                     AddTaskDialog.this.radioGroup.setVisibility(View.VISIBLE);
                     AddTaskDialog.this.eventAmount.setVisibility(View.VISIBLE);
                     AddTaskDialog.this.howMuchText.setVisibility(View.VISIBLE);
+                    AddTaskDialog.this.spinner.setVisibility(View.VISIBLE);
                 }else {
-                    AddTaskDialog.this.radioGroup.setVisibility(View.INVISIBLE);
-                    AddTaskDialog.this.eventAmount.setVisibility(View.INVISIBLE);
-                    AddTaskDialog.this.howMuchText.setVisibility(View.INVISIBLE);
+                    AddTaskDialog.this.radioGroup.setVisibility(View.GONE);
+                    AddTaskDialog.this.eventAmount.setVisibility(View.GONE);
+                    AddTaskDialog.this.howMuchText.setVisibility(View.GONE);
+                    AddTaskDialog.this.spinner.setVisibility(View.GONE);
                 }
             }
         });
@@ -107,9 +124,12 @@ public class AddTaskDialog extends DialogFragment {
                     //TODO fix bug make the radio to be used!!!
                     boolean isIncome = AddTaskDialog.this.incomeRadio.isChecked();
 
+                    int accountPos = AddTaskDialog.this.spinner.getSelectedItemPosition();
+                    int accountID = accounts.get(accountPos).getDbUid();
+
                     try {
                         PaymentEvent newEvent = new PaymentEvent(eventName, eventDescription, amount, isIncome, false, dateTime);
-                        AddTaskDialog.this.userManager.addEvent(newEvent);
+                        AddTaskDialog.this.userManager.addEvent(newEvent, accountID);
                     } catch (IllegalAmountException e) {
                         e.printStackTrace();
                     }

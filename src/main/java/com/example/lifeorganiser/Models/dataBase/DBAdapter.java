@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.lifeorganiser.src.Models.Exceptions.DBManagerException;
 import com.example.lifeorganiser.src.Models.Exceptions.IllegalAmountException;
 import com.example.lifeorganiser.src.Models.Interfaces.IDBManager;
+import com.example.lifeorganiser.src.Models.accounts.DebitAccount;
 import com.example.lifeorganiser.src.Models.events.DatedEvent;
 import com.example.lifeorganiser.src.Models.events.NotificationEvent;
 import com.example.lifeorganiser.src.Models.events.PaymentEvent;
@@ -18,10 +19,11 @@ import com.example.lifeorganiser.src.Models.user.User;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.TreeSet;
 
 public class DBAdapter implements IDBManager{
-    
+
     private DBHelper helper;
 
     public DBAdapter(Context context) {
@@ -81,8 +83,26 @@ public class DBAdapter implements IDBManager{
         values.put(DBHelper.TODO_EVENT_NAME, name);
         values.put(DBHelper.TODO_EVENT_DESCRIPTION, description);
 
-        db.update(DBHelper.TABLE_NAME_TODOS, values, DBHelper.USERS_UID + "=? AND " + DBHelper.TODO_EVENT_NAME + "=? AND " +
-                DBHelper.TODO_EVENT_DESCRIPTION + "=?", whereArgs);
+        db.update(DBHelper.TABLE_NAME_TODOS,
+                values,
+                DBHelper.USERS_UID + "=? AND " + DBHelper.TODO_EVENT_NAME + "=? AND " + DBHelper.TODO_EVENT_DESCRIPTION + "=?",
+                whereArgs);
+    }
+
+    @Override
+    public void updateAccount(String name, double amount, int accountId) {
+        SQLiteDatabase db = this.helper.getWritableDatabase();
+
+        String[] whereArgs = new String[]{String.valueOf(accountId)};
+
+        ContentValues values = new ContentValues();
+        values.put(DBHelper.ACCOUNTS_NAME, name);
+        values.put(DBHelper.ACCOUNTS_AMOUNT, amount);
+
+        db.update(DBHelper.ACCOUNTS_TABLE_NAME,
+                values,
+                DBHelper.ACCOUNTS_ID + "=?",
+                whereArgs);
     }
 
     @Override
@@ -146,6 +166,7 @@ public class DBAdapter implements IDBManager{
         return user;
     }
 
+    @Override
     public ArrayList<TODOEvent> getTODOEvents(int userID, TODOEvent.Type type){
         SQLiteDatabase db = this.helper.getWritableDatabase();
 
@@ -166,6 +187,52 @@ public class DBAdapter implements IDBManager{
         }
 
         return todos;
+    }
+
+    @Override
+    public DebitAccount getDebitAccount(int id, String name, double amount) throws DBManagerException {
+        SQLiteDatabase db = this.helper.getWritableDatabase();
+
+        String[] columns = new String[]{DBHelper.ACCOUNTS_ID, DBHelper.ACCOUNTS_NAME, DBHelper.ACCOUNTS_AMOUNT};
+
+        Cursor cursor = db.query(DBHelper.ACCOUNTS_TABLE_NAME,
+                columns,
+                DBHelper.USERS_UID + "=" + id + " AND " + DBHelper.ACCOUNTS_NAME + "='" + name + "'",
+                null, null, null, null);
+
+        if (cursor.moveToNext()){
+            int idIndex = cursor.getColumnIndex(DBHelper.ACCOUNTS_ID);
+            int nameIndex = cursor.getColumnIndex(DBHelper.ACCOUNTS_NAME);
+            int amountIndex = cursor.getColumnIndex(DBHelper.ACCOUNTS_AMOUNT);
+
+            return new DebitAccount(cursor.getString(nameIndex), cursor.getDouble(amountIndex), cursor.getInt(idIndex));
+        }
+
+        throw new DBManagerException("Account not found");
+    }
+
+    @Override
+    public Collection<DebitAccount> getAllDebitAccounts(int id) {
+        SQLiteDatabase db = this.helper.getWritableDatabase();
+
+        String[] columns = new String[]{DBHelper.ACCOUNTS_ID, DBHelper.ACCOUNTS_NAME, DBHelper.ACCOUNTS_AMOUNT};
+
+        Cursor cursor = db.query(DBHelper.ACCOUNTS_TABLE_NAME,
+                columns,
+                DBHelper.USERS_UID + "=" + id,
+                null, null, null, null);
+
+        ArrayList<DebitAccount> accounts = new ArrayList<DebitAccount>();
+
+        while (cursor.moveToNext()){
+            int idIndex = cursor.getColumnIndex(DBHelper.ACCOUNTS_ID);
+            int nameIndex = cursor.getColumnIndex(DBHelper.ACCOUNTS_NAME);
+            int amountIndex = cursor.getColumnIndex(DBHelper.ACCOUNTS_AMOUNT);
+
+            accounts.add(new DebitAccount(cursor.getString(nameIndex), cursor.getDouble(amountIndex), cursor.getInt(idIndex)));
+        }
+
+        return accounts;
     }
 
     @Override
@@ -232,7 +299,53 @@ public class DBAdapter implements IDBManager{
             int dateIndex = cursor.getColumnIndex(DBHelper.PAYMENT_EVENT_FOR_DATE);
             int timeIndex = cursor.getColumnIndex(DBHelper.PAYMENT_EVENT_FOR_TIME);
 
-            String[] date = cursor.getString(dateIndex).split("\\.");
+            String[] date = cursor.getString(dateIndex).split("-");
+            String[] time = cursor.getString(timeIndex).split("\\.");
+            //TODO bug
+            if (time.length < 2){
+                time = new String[]{"0", "0"};
+            }
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Integer.parseInt(date[0]), Integer.parseInt(date[1]), Integer.parseInt(date[2]),
+                    Integer.parseInt(time[0]), Integer.parseInt(time[1]));
+
+            try {
+                paymentEvents.add(new PaymentEvent(cursor.getString(nameIndex),cursor.getString(descriptionIndex), cursor.getDouble(amountIndex),
+                        true, Boolean.parseBoolean(cursor.getString(isPayedIndex)), calendar));
+            } catch (IllegalAmountException e) {
+                e.printStackTrace();
+            }
+        }
+
+        cursor.close();
+
+        return paymentEvents;
+    }
+
+    @Override
+    public ArrayList<PaymentEvent> getPaymentEvents(int userId, int accountId) {
+        SQLiteDatabase db = this.helper.getWritableDatabase();
+
+        ArrayList<PaymentEvent> paymentEvents = new ArrayList<>();
+
+        String[] columns = new String[]{DBHelper.PAYMENT_EVENT_NAME, DBHelper.PAYMENT_EVENT_DESCRIPTION, DBHelper.PAYMENT_EVENT_AMOUNT,
+                DBHelper.PAYMENT_EVENT_IS_PAYED, DBHelper.PAYMENT_EVENT_FOR_DATE, DBHelper.PAYMENT_EVENT_FOR_TIME};
+
+        Cursor cursor = db.query(DBHelper.PAYMENT_EVENTS_TABLE_NAME,
+                columns,
+                DBHelper.USERS_UID + "=" + userId + " AND " + DBHelper.ACCOUNTS_ID + "=" + accountId,
+                null, null, null, null);
+
+        while (cursor.moveToNext()){
+            int nameIndex = cursor.getColumnIndex(DBHelper.PAYMENT_EVENT_NAME);
+            int descriptionIndex = cursor.getColumnIndex(DBHelper.PAYMENT_EVENT_DESCRIPTION);
+            int amountIndex = cursor.getColumnIndex(DBHelper.PAYMENT_EVENT_AMOUNT);
+            int isPayedIndex = cursor.getColumnIndex(DBHelper.PAYMENT_EVENT_IS_PAYED);
+            int dateIndex = cursor.getColumnIndex(DBHelper.PAYMENT_EVENT_FOR_DATE);
+            int timeIndex = cursor.getColumnIndex(DBHelper.PAYMENT_EVENT_FOR_TIME);
+
+            String[] date = cursor.getString(dateIndex).split("-");
             String[] time = cursor.getString(timeIndex).split("\\.");
             //TODO bug
             if (time.length < 2){
@@ -273,7 +386,7 @@ public class DBAdapter implements IDBManager{
     }
 
     @Override
-    public void addPaymentEvent(int userId, String eventName, String eventDescription,
+    public void addPaymentEvent(int userId, int accountID, String eventName, String eventDescription,
                                     double amount, boolean isPayed, Calendar dateTime){
         SQLiteDatabase db = this.helper.getWritableDatabase();
 
@@ -288,6 +401,7 @@ public class DBAdapter implements IDBManager{
         values.put(DBHelper.PAYMENT_EVENT_IS_PAYED, isPayed);
         values.put(DBHelper.PAYMENT_EVENT_FOR_DATE, date);
         values.put(DBHelper.PAYMENT_EVENT_FOR_TIME, time);
+        values.put(DBHelper.ACCOUNTS_ID, accountID);
 
         db.insert(DBHelper.PAYMENT_EVENTS_TABLE_NAME, null, values);
     }
@@ -310,7 +424,7 @@ public class DBAdapter implements IDBManager{
     }
 
 
-
+    @Override
     public void addTODOEvent(int userID, String name, String description, TODOEvent.Type type){
         SQLiteDatabase db = this.helper.getWritableDatabase();
 
@@ -321,6 +435,18 @@ public class DBAdapter implements IDBManager{
         values.put(DBHelper.TODO_EVENT_TYPE, type.toString());
 
         db.insert(DBHelper.TABLE_NAME_TODOS, null, values);
+    }
+
+    @Override
+    public void addDebitAccount(int id, String name, double amount) {
+        SQLiteDatabase db = this.helper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(DBHelper.USERS_UID, id);
+        values.put(DBHelper.ACCOUNTS_NAME, name);
+        values.put(DBHelper.ACCOUNTS_AMOUNT, amount);
+
+        db.insert(DBHelper.ACCOUNTS_TABLE_NAME, null, values);
     }
 
     public void addShoppingListData(String itemName, double itemValue, int listID, int userID){
@@ -375,6 +501,11 @@ public class DBAdapter implements IDBManager{
         private static final String NOTIFICATION_EVENTS_DATE = "for_date";
         private static final String NOTIFICATION_EVENTS_TIME = "for_time";
 
+        private static final String ACCOUNTS_TABLE_NAME = "accounts";
+        private static final String ACCOUNTS_ID = "accounts_id";
+        private static final String ACCOUNTS_NAME = "accounts_name";
+        private static final String ACCOUNTS_AMOUNT = "accounts_amount";
+
         public DBHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
@@ -397,6 +528,8 @@ public class DBAdapter implements IDBManager{
                     PAYMENT_EVENT_IS_PAYED + " BOOLEAN NOT NULL," +
                     PAYMENT_EVENT_FOR_DATE + " DATE NOT NULL," +
                     PAYMENT_EVENT_FOR_TIME + " TIME NOT NULL," +
+                    ACCOUNTS_ID + " INTEGER," +
+                    "FOREIGN KEY (" + DBHelper.ACCOUNTS_ID + ") REFERENCES " + DBHelper.ACCOUNTS_TABLE_NAME + "(" + DBHelper.ACCOUNTS_ID + ")" +
                     "FOREIGN KEY (" + DBHelper.USERS_UID + ") REFERENCES " + USERS_TABLE_NAME + "(" + DBHelper.USERS_UID + ")" +
                     ");");
 
@@ -425,6 +558,14 @@ public class DBAdapter implements IDBManager{
                     NOTIFICATION_EVENTS_DESCRIPTION + " VARCHAR(255), " +
                     NOTIFICATION_EVENTS_DATE + " DATE NOT NULL," +
                     NOTIFICATION_EVENTS_TIME + " TIME NOT NULL," +
+                    "FOREIGN KEY (" + DBHelper.USERS_UID + ") REFERENCES " + USERS_TABLE_NAME + "(" + DBHelper.USERS_UID + ")" +
+                    ");");
+
+            db.execSQL("CREATE TABLE " + ACCOUNTS_TABLE_NAME + " (" +
+                    ACCOUNTS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    DBHelper.USERS_UID + " INTEGER NOT NULL, " +
+                    ACCOUNTS_NAME + " VARCHAR(255) NOT NULL, " +
+                    ACCOUNTS_AMOUNT + " DOUBLE PRECISION," +
                     "FOREIGN KEY (" + DBHelper.USERS_UID + ") REFERENCES " + USERS_TABLE_NAME + "(" + DBHelper.USERS_UID + ")" +
                     ");");
         }

@@ -60,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:visibility="invisible"
+                android:visibility="gone"
                 android:orientation="horizontal">
                 <RadioButton
                     android:id="@+id/incomeRadio"
@@ -73,24 +73,28 @@
                     android:layout_height="wrap_content"
                     android:text="@string/expenses"/>
             </RadioGroup>
+            <Spinner
+                android:id="@+id/addTaskSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:background="@android:drawable/btn_dropdown"
+                android:spinnerMode="dropdown" />
             <TextView
                 android:id="@+id/addTaskHowMuch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:visibility="invisible"
+                android:visibility="gone"
                 android:text="@string/how_much"/>
             <EditText
                 android:id="@+id/addTaskAmount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:visibility="invisible"
+                android:visibility="gone"
                 android:inputType="number"
                 android:hint="@string/amount"/>
         </LinearLayout>
     </ScrollView>
-
-
-
 </FrameLayout>
