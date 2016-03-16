@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.lifeorganiser.src.Models.Exceptions.DBManagerException;
 import com.example.lifeorganiser.src.Models.Exceptions.IllegalAmountException;
@@ -14,6 +15,8 @@ import com.example.lifeorganiser.src.Models.accounts.DebitAccount;
 import com.example.lifeorganiser.src.Models.events.DatedEvent;
 import com.example.lifeorganiser.src.Models.events.NotificationEvent;
 import com.example.lifeorganiser.src.Models.events.PaymentEvent;
+import com.example.lifeorganiser.src.Models.events.ShoppingList;
+import com.example.lifeorganiser.src.Models.events.ShoppingListEntry;
 import com.example.lifeorganiser.src.Models.events.TODOEvent;
 import com.example.lifeorganiser.src.Models.user.User;
 
@@ -72,6 +75,24 @@ public class DBAdapter implements IDBManager{
         values.put(DBHelper.USERS_TABLE_EMAIL_COLUMN, email);
 
         db.update(DBHelper.USERS_TABLE_NAME, values, DBHelper.USERS_UID + "=?", whereArgs);
+    }
+
+    @Override
+    public void updateEntry(ShoppingListEntry entry, String newName, double newPrice, boolean newIsChecked) {
+        SQLiteDatabase db = this.helper.getWritableDatabase();
+
+        String[] whereArgs = new String[]{String.valueOf(entry.getDbId())};
+
+        ContentValues values = new ContentValues();
+
+        values.put(DBHelper.SHOPPING_LIST_ENTRIES_ENTRY_NAME, newName);
+        values.put(DBHelper.SHOPPING_LIST_ENTRIES_ENTRY_PRICE, newPrice);
+        values.put(DBHelper.SHOPPING_LIST_ENTRIES_IS_TAKEN, newIsChecked);
+
+        db.update(DBHelper.SHOPPING_LIST_ENTRIES_TABLE_NAME,
+                values,
+                DBHelper.SHOPPING_LIST_ENTRIES_ENTRY_ID + "=?",
+                whereArgs);
     }
 
     public void updateTODOData(int userID, String oldName, String oldDescription, String name, String description) {
@@ -187,6 +208,123 @@ public class DBAdapter implements IDBManager{
         }
 
         return todos;
+    }
+
+    @Override
+    public ShoppingList getShoppingList(int userID, String name) throws DBManagerException {
+        SQLiteDatabase db = this.helper.getWritableDatabase();
+
+        String[] columns = new String[]{DBHelper.SHOPPING_LIST_LIST_ID, DBHelper.SHOPPING_LIST_LIST_NAME, DBHelper.SHOPPING_LIST_IS_PAID};
+
+        Cursor cursor = db.query(DBHelper.TABLE_NAME_SHOPPING_LISTS,
+                columns,
+                DBHelper.USERS_UID + "=" + userID + " AND " + DBHelper.SHOPPING_LIST_LIST_NAME + "='" + name + "'",
+                null, null, null, null);
+
+        if (cursor.moveToNext()){
+            int idIndex = cursor.getColumnIndex(DBHelper.SHOPPING_LIST_LIST_ID);
+            int shoppingListNameIndex = cursor.getColumnIndex(DBHelper.SHOPPING_LIST_LIST_NAME);
+            int isPayedIndex = cursor.getColumnIndex(DBHelper.SHOPPING_LIST_IS_PAID);
+
+           ShoppingList shoppingList = new ShoppingList(cursor.getString(shoppingListNameIndex),
+                    cursor.getInt(idIndex),
+                    Boolean.parseBoolean(cursor.getString(isPayedIndex)));
+
+            this.addEntriesToShoppingList(shoppingList);
+
+            return shoppingList;
+        }
+
+        throw new DBManagerException("Shopping list not found");
+    }
+
+    @Override
+    public ArrayList<ShoppingList> getAllShoppingLists(int userId) {
+        SQLiteDatabase db = this.helper.getWritableDatabase();
+
+        ArrayList<ShoppingList> lists = new ArrayList<>();
+
+        String[] columns = new String[]{DBHelper.SHOPPING_LIST_LIST_ID, DBHelper.SHOPPING_LIST_LIST_NAME, DBHelper.SHOPPING_LIST_IS_PAID};
+
+        Cursor cursor = db.query(DBHelper.TABLE_NAME_SHOPPING_LISTS,
+                columns,
+                DBHelper.USERS_UID + "=" + userId,
+                null, null, null, null);
+
+        while (cursor.moveToNext()){
+            int idIndex = cursor.getColumnIndex(DBHelper.SHOPPING_LIST_LIST_ID);
+            int shoppingListNameIndex = cursor.getColumnIndex(DBHelper.SHOPPING_LIST_LIST_NAME);
+            int isPayedIndex = cursor.getColumnIndex(DBHelper.SHOPPING_LIST_IS_PAID);
+
+            ShoppingList shoppingList = new ShoppingList(cursor.getString(shoppingListNameIndex),
+                    cursor.getInt(idIndex),
+                    Boolean.parseBoolean(cursor.getString(isPayedIndex)));
+
+            this.addEntriesToShoppingList(shoppingList);
+
+            lists.add(shoppingList);
+        }
+
+        return lists;
+    }
+
+    private void addEntriesToShoppingList(ShoppingList shoppingList){
+        int shoppingListID = shoppingList.getDbID();
+
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        String[] columns = new String[]{DBHelper.SHOPPING_LIST_ENTRIES_ENTRY_NAME,
+                DBHelper.SHOPPING_LIST_ENTRIES_ENTRY_PRICE,
+                DBHelper.SHOPPING_LIST_ENTRIES_IS_TAKEN,
+                DBHelper.SHOPPING_LIST_ENTRIES_ENTRY_ID};
+
+        Cursor cursor = db.query(DBHelper.SHOPPING_LIST_ENTRIES_TABLE_NAME,
+                columns,
+                DBHelper.SHOPPING_LIST_LIST_ID  + "=" + shoppingListID,
+                null, null, null, null);
+
+        while (cursor.moveToNext()){
+            int entryNameIndex = cursor.getColumnIndex(DBHelper.SHOPPING_LIST_ENTRIES_ENTRY_NAME);
+            int price = cursor.getColumnIndex(DBHelper.SHOPPING_LIST_ENTRIES_ENTRY_PRICE);
+            int isTakenIndex = cursor.getColumnIndex(DBHelper.SHOPPING_LIST_ENTRIES_IS_TAKEN);
+            int entryId = cursor.getColumnIndex(DBHelper.SHOPPING_LIST_ENTRIES_ENTRY_ID);
+
+            boolean isTaken = (cursor.getInt(isTakenIndex) > 0);
+
+            shoppingList.addEntry(new ShoppingListEntry(cursor.getString(entryNameIndex),
+                    cursor.getDouble(price),
+                    isTaken,
+                    cursor.getInt(entryId)));
+        }
+    }
+
+    @Override
+    public ShoppingListEntry getLastShoppingListEntry() {
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        String[] columns = new String[]{DBHelper.SHOPPING_LIST_ENTRIES_ENTRY_NAME,
+                DBHelper.SHOPPING_LIST_ENTRIES_ENTRY_PRICE,
+                DBHelper.SHOPPING_LIST_ENTRIES_IS_TAKEN,
+                DBHelper.SHOPPING_LIST_ENTRIES_ENTRY_ID};
+
+        Cursor cursor = db.query(DBHelper.SHOPPING_LIST_ENTRIES_TABLE_NAME,
+                columns,
+                DBHelper.SHOPPING_LIST_ENTRIES_ENTRY_ID  + "=(SELECT max(" + DBHelper.SHOPPING_LIST_ENTRIES_ENTRY_ID + ") FROM "+ DBHelper.SHOPPING_LIST_ENTRIES_TABLE_NAME + ")",
+                null, null, null, null);
+
+        if (cursor.moveToNext()){
+            int entryNameIndex = cursor.getColumnIndex(DBHelper.SHOPPING_LIST_ENTRIES_ENTRY_NAME);
+            int price = cursor.getColumnIndex(DBHelper.SHOPPING_LIST_ENTRIES_ENTRY_PRICE);
+            int isTakenIndex = cursor.getColumnIndex(DBHelper.SHOPPING_LIST_ENTRIES_IS_TAKEN);
+            int entryId = cursor.getColumnIndex(DBHelper.SHOPPING_LIST_ENTRIES_ENTRY_ID);
+
+            return new ShoppingListEntry(cursor.getString(entryNameIndex),
+                    cursor.getDouble(price),
+                    Boolean.parseBoolean(cursor.getString(isTakenIndex)),
+                    cursor.getInt(entryId));
+        }
+
+        return null;
     }
 
     @Override
@@ -330,7 +468,7 @@ public class DBAdapter implements IDBManager{
         ArrayList<PaymentEvent> paymentEvents = new ArrayList<>();
 
         String[] columns = new String[]{DBHelper.PAYMENT_EVENT_NAME, DBHelper.PAYMENT_EVENT_DESCRIPTION, DBHelper.PAYMENT_EVENT_AMOUNT,
-                DBHelper.PAYMENT_EVENT_IS_PAYED, DBHelper.PAYMENT_EVENT_FOR_DATE, DBHelper.PAYMENT_EVENT_FOR_TIME};
+                DBHelper.PAYMENT_EVENT_IS_PAYED, DBHelper.PAYMENT_EVENT_FOR_DATE, DBHelper.PAYMENT_EVENT_FOR_TIME, DBHelper.PAYMENT_EVENT_IS_INCOME};
 
         Cursor cursor = db.query(DBHelper.PAYMENT_EVENTS_TABLE_NAME,
                 columns,
@@ -344,10 +482,11 @@ public class DBAdapter implements IDBManager{
             int isPayedIndex = cursor.getColumnIndex(DBHelper.PAYMENT_EVENT_IS_PAYED);
             int dateIndex = cursor.getColumnIndex(DBHelper.PAYMENT_EVENT_FOR_DATE);
             int timeIndex = cursor.getColumnIndex(DBHelper.PAYMENT_EVENT_FOR_TIME);
+            int isIncomeIndex = cursor.getColumnIndex(DBHelper.PAYMENT_EVENT_IS_INCOME);
 
             String[] date = cursor.getString(dateIndex).split("-");
             String[] time = cursor.getString(timeIndex).split("\\.");
-            //TODO bug
+
             if (time.length < 2){
                 time = new String[]{"0", "0"};
             }
@@ -356,9 +495,12 @@ public class DBAdapter implements IDBManager{
             calendar.set(Integer.parseInt(date[0]), Integer.parseInt(date[1]), Integer.parseInt(date[2]),
                     Integer.parseInt(time[0]), Integer.parseInt(time[1]));
 
+            boolean isIncome = cursor.getInt(isIncomeIndex) > 0;
+            boolean isPaid = cursor.getInt(isPayedIndex) > 0;
+
             try {
                 paymentEvents.add(new PaymentEvent(cursor.getString(nameIndex),cursor.getString(descriptionIndex), cursor.getDouble(amountIndex),
-                        true, Boolean.parseBoolean(cursor.getString(isPayedIndex)), calendar));
+                        isIncome, isPaid, calendar));
             } catch (IllegalAmountException e) {
                 e.printStackTrace();
             }
@@ -387,7 +529,7 @@ public class DBAdapter implements IDBManager{
 
     @Override
     public void addPaymentEvent(int userId, int accountID, String eventName, String eventDescription,
-                                    double amount, boolean isPayed, Calendar dateTime){
+                                    double amount, boolean isIncome, boolean isPayed, Calendar dateTime){
         SQLiteDatabase db = this.helper.getWritableDatabase();
 
         String date = dateTime.get(Calendar.YEAR) + "-" + dateTime.get(Calendar.MONTH) + "-" + dateTime.get(Calendar.DAY_OF_MONTH);
@@ -400,6 +542,7 @@ public class DBAdapter implements IDBManager{
         values.put(DBHelper.PAYMENT_EVENT_AMOUNT, amount);
         values.put(DBHelper.PAYMENT_EVENT_IS_PAYED, isPayed);
         values.put(DBHelper.PAYMENT_EVENT_FOR_DATE, date);
+        values.put(DBHelper.PAYMENT_EVENT_IS_INCOME, isIncome);
         values.put(DBHelper.PAYMENT_EVENT_FOR_TIME, time);
         values.put(DBHelper.ACCOUNTS_ID, accountID);
 
@@ -449,17 +592,31 @@ public class DBAdapter implements IDBManager{
         db.insert(DBHelper.ACCOUNTS_TABLE_NAME, null, values);
     }
 
-    public void addShoppingListData(String itemName, double itemValue, int listID, int userID){
+    @Override
+    public void addShoppingList(String name, int userID, boolean isPayed){
         SQLiteDatabase db = this.helper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
 
-        values.put(DBHelper.SHOPPING_LIST_ITEM_NAME, itemName);
-        values.put(DBHelper.SHOPPING_LIST_ITEM_VALUE, itemValue);
-        values.put(DBHelper.SHOPPING_LIST_LIST_ID, listID);
+        values.put(DBHelper.SHOPPING_LIST_LIST_NAME, name);
         values.put(DBHelper.USERS_UID, userID);
+        values.put(DBHelper.SHOPPING_LIST_IS_PAID, isPayed);
 
         db.insert(DBHelper.TABLE_NAME_SHOPPING_LISTS, null, values);
+    }
+
+    @Override
+    public void addShoppingListEntry(int shoppingListID, String entryName, double price, boolean isTaken) {
+        SQLiteDatabase db = this.helper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(DBHelper.SHOPPING_LIST_ENTRIES_ENTRY_NAME, entryName);
+        values.put(DBHelper.SHOPPING_LIST_ENTRIES_ENTRY_PRICE, price);
+        values.put(DBHelper.SHOPPING_LIST_ENTRIES_IS_TAKEN, isTaken);
+        values.put(DBHelper.SHOPPING_LIST_LIST_ID, shoppingListID);
+
+        db.insert(DBHelper.SHOPPING_LIST_ENTRIES_TABLE_NAME, null, values);
     }
 
     class DBHelper extends SQLiteOpenHelper {
@@ -481,6 +638,7 @@ public class DBAdapter implements IDBManager{
         private static final String PAYMENT_EVENT_IS_PAYED = "is_payed";
         private static final String PAYMENT_EVENT_FOR_DATE = "for_date";
         private static final String PAYMENT_EVENT_FOR_TIME = "for_time";
+        private static final String PAYMENT_EVENT_IS_INCOME = "is_income";
 
         private static final String TABLE_NAME_TODOS = "todos";
         private static final String TODO_EVENTS_ID = "pe_id";
@@ -489,9 +647,7 @@ public class DBAdapter implements IDBManager{
         private static final String TODO_EVENT_TYPE = "type";
 
         private static final String TABLE_NAME_SHOPPING_LISTS = "shopping_lists";
-        private static final String SHOPPING_LIST_ITEM_ID = "pe_id";
-        private static final String SHOPPING_LIST_ITEM_NAME = "item_name";
-        private static final String SHOPPING_LIST_ITEM_VALUE = "item_value";
+        private static final String SHOPPING_LIST_LIST_NAME = "list_name";
         private static final String SHOPPING_LIST_LIST_ID = "list_id";
 
         private static final String NOTIFICATION_EVENTS_TABLE_NAME = "notification_events";
@@ -505,6 +661,14 @@ public class DBAdapter implements IDBManager{
         private static final String ACCOUNTS_ID = "accounts_id";
         private static final String ACCOUNTS_NAME = "accounts_name";
         private static final String ACCOUNTS_AMOUNT = "accounts_amount";
+
+        private static final String SHOPPING_LIST_ENTRIES_TABLE_NAME = "shopping_list_entries";
+        private static final String SHOPPING_LIST_ENTRIES_ENTRY_ID = "entries_id";
+        private static final String SHOPPING_LIST_ENTRIES_ENTRY_NAME = "entry_name";
+        private static final String SHOPPING_LIST_ENTRIES_ENTRY_PRICE = "entry_price";
+        private static final String SHOPPING_LIST_IS_PAID = "list_is_paid";
+        private static final String SHOPPING_LIST_ENTRIES_IS_TAKEN = "isTaken";
+
 
         public DBHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -525,6 +689,7 @@ public class DBAdapter implements IDBManager{
                     PAYMENT_EVENT_NAME + " VARCHAR(25) NOT NULL," +
                     PAYMENT_EVENT_DESCRIPTION + " VARCHAR(255), " +
                     PAYMENT_EVENT_AMOUNT + " DOUBLE PRECISION UNSIGNED," +
+                    PAYMENT_EVENT_IS_INCOME + " BOOLEAN NOT NULL," +
                     PAYMENT_EVENT_IS_PAYED + " BOOLEAN NOT NULL," +
                     PAYMENT_EVENT_FOR_DATE + " DATE NOT NULL," +
                     PAYMENT_EVENT_FOR_TIME + " TIME NOT NULL," +
@@ -543,11 +708,10 @@ public class DBAdapter implements IDBManager{
                     ");");
 
             db.execSQL("CREATE TABLE " + TABLE_NAME_SHOPPING_LISTS + " (" +
-                    SHOPPING_LIST_ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    SHOPPING_LIST_LIST_ID + " INTEGER NOT NULL," +
+                    SHOPPING_LIST_LIST_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                     DBHelper.USERS_UID + " INTEGER NOT NULL," +
-                    SHOPPING_LIST_ITEM_NAME + " VARCHAR(100) NOT NULL," +
-                    SHOPPING_LIST_ITEM_VALUE + " DOUBLE PRECISION," +
+                    SHOPPING_LIST_LIST_NAME + " VARCHAR(100)," +
+                    SHOPPING_LIST_IS_PAID + " BOOLEAN NOT NULL," +
                     "FOREIGN KEY (" + DBHelper.USERS_UID + ") REFERENCES " + USERS_TABLE_NAME + "(" + DBHelper.USERS_UID + ")" +
                     ");");
 
@@ -559,6 +723,15 @@ public class DBAdapter implements IDBManager{
                     NOTIFICATION_EVENTS_DATE + " DATE NOT NULL," +
                     NOTIFICATION_EVENTS_TIME + " TIME NOT NULL," +
                     "FOREIGN KEY (" + DBHelper.USERS_UID + ") REFERENCES " + USERS_TABLE_NAME + "(" + DBHelper.USERS_UID + ")" +
+                    ");");
+
+            db.execSQL("CREATE TABLE " + SHOPPING_LIST_ENTRIES_TABLE_NAME + " ("
+                    + SHOPPING_LIST_ENTRIES_ENTRY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    SHOPPING_LIST_LIST_ID + " INTEGER NOT NULL, " +
+                    SHOPPING_LIST_ENTRIES_ENTRY_NAME + " INTEGER NOT NULL, " +
+                    SHOPPING_LIST_ENTRIES_ENTRY_PRICE + " DOUBLE PRECISION," +
+                    SHOPPING_LIST_ENTRIES_IS_TAKEN + " BOOLEAN NOT NULL, " +
+                    "FOREIGN KEY (" + SHOPPING_LIST_LIST_ID + ") REFERENCES " + TABLE_NAME_SHOPPING_LISTS + "(" + SHOPPING_LIST_LIST_ID + ")" +
                     ");");
 
             db.execSQL("CREATE TABLE " + ACCOUNTS_TABLE_NAME + " (" +

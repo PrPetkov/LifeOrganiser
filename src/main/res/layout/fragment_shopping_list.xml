@@ -3,18 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".src.controllers.accountFragments.AccountsFragment">
-
+    tools:context=".src.controllers.shoppingListFragments.ShoppingListFragment">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:textSize="30sp"
-        android:text="@string/accounts"
-        android:gravity="center_horizontal"/>
-
+        android:text="@string/shopping_list"/>
     <ListView
-        android:id="@+id/accountsListView"
+        android:id="@+id/shoppingFragmentListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-
 </LinearLayout>

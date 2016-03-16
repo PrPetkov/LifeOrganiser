@@ -1,7 +1,8 @@
-package com.example.lifeorganiser.src.controllers;
+package com.example.lifeorganiser.src.controllers.accountFragments;
 
 
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -15,14 +16,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lifeorganiser.R;
-import com.example.lifeorganiser.src.Models.Exceptions.IllegalAmountException;
 import com.example.lifeorganiser.src.Models.Exceptions.UserManagerException;
 import com.example.lifeorganiser.src.Models.accounts.DebitAccount;
 import com.example.lifeorganiser.src.Models.events.PaymentEvent;
 import com.example.lifeorganiser.src.Models.user.UserManager;
+import com.example.lifeorganiser.src.controllers.taskFragments.TaskViewDialogFragment;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class AccountViewFragment extends Fragment {
 
@@ -31,6 +31,7 @@ public class AccountViewFragment extends Fragment {
     private UserManager userManager;
     private double amount;
     private DebitAccount account;
+    private Bundle arguments;
 
     private TextView accountNameTextView;
     private TextView accountAmountTextView;
@@ -43,9 +44,9 @@ public class AccountViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         this.userManager = UserManager.getInstance();
 
-        Bundle arguments = getArguments();
+        this.arguments = getArguments();
 
-        this.account = (DebitAccount) arguments.get("account");
+        this.account = (DebitAccount) this.arguments.get("account");
 
         View v = inflater.inflate(R.layout.fragment_account_view, container, false);
 
@@ -84,7 +85,7 @@ public class AccountViewFragment extends Fragment {
         ArrayList<String> stringAccountHistory = new ArrayList<>();
 
         for (PaymentEvent event : accountHistory){
-            String type = (event.getIsIncome()) ? "Income" : "Expenses";
+            String type = event.getIsIncome() ? "Income" : "Expenses";
             String text = type + ": " + event.getTitle() + " balance: " + event.getAmount();
             stringAccountHistory.add(text);
         }
@@ -130,5 +131,11 @@ public class AccountViewFragment extends Fragment {
                 Toast.makeText(getActivity().getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
+
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        AccountViewFragment fragment = new AccountViewFragment();
+        fragment.setArguments(this.arguments);
+        transaction.replace(R.id.fragmentLayout, fragment);
+        transaction.commit();
     }
 }

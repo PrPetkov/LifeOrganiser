@@ -1,14 +1,12 @@
-package com.example.lifeorganiser.src.controllers;
+package com.example.lifeorganiser.src.controllers.todayFragments;
 
 
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -18,10 +16,10 @@ import com.example.lifeorganiser.R;
 import com.example.lifeorganiser.src.Models.events.DatedEvent;
 import com.example.lifeorganiser.src.Models.events.Event;
 import com.example.lifeorganiser.src.Models.user.UserManager;
+import com.example.lifeorganiser.src.controllers.taskFragments.AddTaskDialog;
+import com.example.lifeorganiser.src.controllers.taskFragments.TaskViewDialogFragment;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 
 
@@ -32,6 +30,8 @@ public class TodayFragment extends android.app.Fragment {
     private UserManager userManager;
 
     private TextView usenameGreatingTextView;
+    private TextView greating;
+    private TextView dayTextView;
     private ListView tasksListView;
 
     @Override
@@ -44,15 +44,28 @@ public class TodayFragment extends android.app.Fragment {
 
         this.usenameGreatingTextView = (TextView) v.findViewById(R.id.todayActivityUsernameTextView);
         this.tasksListView = (ListView) v.findViewById(R.id.todayActivityListView);
+        this.dayTextView = (TextView) v.findViewById(R.id.todayActivityDay);
+        this.greating = (TextView) v.findViewById(R.id.todayActivityHello);
 
         this.usenameGreatingTextView.setText(this.userManager.getUsername());
+
+        Calendar date = Calendar.getInstance();
+
+        Bundle bundle = getArguments();
+
+        if (bundle != null && bundle.containsKey("date")){
+            date = (Calendar) bundle.get("date");
+            this.usenameGreatingTextView.setVisibility(View.GONE);
+            this.greating.setVisibility(View.GONE);
+            this.dayTextView.setText(String.format("%d . %d . %d", date.get(Calendar.DAY_OF_MONTH), date.get(Calendar.MONTH), date.get(Calendar.YEAR)));
+        }
 
         final ArrayList<DatedEvent> events = new ArrayList<>();
         ArrayList<String> stringEvents = new ArrayList<>();
         for (DatedEvent event: this.userManager.getTasks()){
-            if (event.getDateTime().get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR) &&
-                    event.getDateTime().get(Calendar.MONTH) == Calendar.getInstance().get(Calendar.MONTH)&&
-                    event.getDateTime().get(Calendar.DAY_OF_MONTH) == Calendar.getInstance().get(Calendar.DAY_OF_MONTH)){
+            if (event.getDateTime().get(Calendar.YEAR) == date.get(Calendar.YEAR) &&
+                    event.getDateTime().get(Calendar.MONTH) == date.get(Calendar.MONTH)&&
+                    event.getDateTime().get(Calendar.DAY_OF_MONTH) == date.get(Calendar.DAY_OF_MONTH)){
                 events.add(event);
                 stringEvents.add(event.getDateTime().get(Calendar.HOUR) + " " +
                         event.getDateTime().get(Calendar.MINUTE) + " " +

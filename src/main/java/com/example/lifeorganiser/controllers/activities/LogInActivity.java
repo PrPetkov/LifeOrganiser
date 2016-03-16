@@ -1,4 +1,4 @@
-package com.example.lifeorganiser.src.controllers;
+package com.example.lifeorganiser.src.controllers.activities;
 
 import android.content.Context;
 import android.content.Intent;

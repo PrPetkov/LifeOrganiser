@@ -4,6 +4,8 @@ import com.example.lifeorganiser.src.Models.Exceptions.DBManagerException;
 import com.example.lifeorganiser.src.Models.accounts.DebitAccount;
 import com.example.lifeorganiser.src.Models.events.DatedEvent;
 import com.example.lifeorganiser.src.Models.events.PaymentEvent;
+import com.example.lifeorganiser.src.Models.events.ShoppingList;
+import com.example.lifeorganiser.src.Models.events.ShoppingListEntry;
 import com.example.lifeorganiser.src.Models.events.TODOEvent;
 import com.example.lifeorganiser.src.Models.user.User;
 
@@ -29,6 +31,7 @@ public interface IDBManager {
                                 String eventName,
                                 String eventDescription,
                                 double amount,
+                                boolean isIncome,
                                 boolean isPayed,
                                 Calendar dateTime);
 
@@ -45,4 +48,16 @@ public interface IDBManager {
     Collection<DebitAccount> getAllDebitAccounts(int id);
 
     void updateAccount(String name, double amount, int accountId);
+
+    void addShoppingList(String name, int userID, boolean isPayed);
+
+    void addShoppingListEntry(int shoppingListID, String entryName, double price, boolean isTaken);
+
+    ArrayList<ShoppingList> getAllShoppingLists(int userId);
+
+    ShoppingList getShoppingList(int userID, String name) throws DBManagerException;
+
+    void updateEntry(ShoppingListEntry entry, String newName, double newPrice, boolean newIsChecked);
+
+    ShoppingListEntry getLastShoppingListEntry();
 }

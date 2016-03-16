@@ -1,15 +1,14 @@
-package com.example.lifeorganiser.src.controllers;
+package com.example.lifeorganiser.src.controllers.todoFragments;
 
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.example.lifeorganiser.R;
@@ -56,6 +55,11 @@ public class AddTODODialogFragment extends DialogFragment {
                         AddTODODialogFragment.this.todoDescriptionEditText.getText().toString());
 
                 AddTODODialogFragment.this.userManager.addTodo(type, todo);
+
+                TODOFragment todoFragment = new TODOFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragmentLayout, todoFragment);
+                transaction.commit();
             }
         });
 

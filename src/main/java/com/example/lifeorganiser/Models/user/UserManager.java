@@ -1,7 +1,5 @@
 package com.example.lifeorganiser.src.Models.user;
 
-import android.widget.Toast;
-
 import com.example.lifeorganiser.src.Models.Exceptions.DBManagerException;
 import com.example.lifeorganiser.src.Models.Exceptions.IllegalAmountException;
 import com.example.lifeorganiser.src.Models.Exceptions.UserManagerException;
@@ -10,12 +8,12 @@ import com.example.lifeorganiser.src.Models.accounts.Account;
 import com.example.lifeorganiser.src.Models.accounts.DebitAccount;
 import com.example.lifeorganiser.src.Models.dataBase.DBAdapter;
 import com.example.lifeorganiser.src.Models.events.DatedEvent;
-import com.example.lifeorganiser.src.Models.events.Event;
 import com.example.lifeorganiser.src.Models.events.NotificationEvent;
 import com.example.lifeorganiser.src.Models.events.PaymentEvent;
+import com.example.lifeorganiser.src.Models.events.ShoppingList;
+import com.example.lifeorganiser.src.Models.events.ShoppingListEntry;
 import com.example.lifeorganiser.src.Models.events.TODOEvent;
-import com.example.lifeorganiser.src.controllers.AccountViewFragment;
-import com.example.lifeorganiser.src.controllers.LogInActivity;
+import com.example.lifeorganiser.src.controllers.activities.LogInActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -69,6 +67,7 @@ public class UserManager {
                 event.getTitle(),
                 event.getDescription(),
                 event.getAmount(),
+                event.getIsIncome(),
                 event.getIsPaid(),
                 event.getDateTime());
 
@@ -180,6 +179,12 @@ public class UserManager {
         this.dbManager.updateAccount(account.getAccountName(), account.getAmount(), account.getDbUid());
     }
 
+    public void pay(Account account, PaymentEvent paymentEvent){
+        this.addEvent(paymentEvent, account.getDbUid());
+        account.withdrawMoney(paymentEvent.getAmount());
+        this.dbManager.updateAccount(account.getAccountName(), account.getAmount(), account.getDbUid());
+    }
+
     public void addMoney(Account account, double amount) throws UserManagerException {
         try {
            this.addEvent(new PaymentEvent("Add money",
@@ -194,6 +199,34 @@ public class UserManager {
         }
 
         this.dbManager.updateAccount(account.getAccountName(), account.getAmount(), account.getDbUid());
+    }
+
+    public ArrayList<ShoppingList> getAllShoppingLists(){
+        ArrayList<ShoppingList> lists = this.user.getAllShoppingLists();
+
+        if (lists.size() == 0){
+            lists.addAll(this.dbManager.getAllShoppingLists(this.user.getId()));
+        }
+
+        return lists;
+    }
+
+    public void addShoppingList(String name, boolean isPayed) throws UserManagerException {
+        this.dbManager.addShoppingList(name, this.user.getId(), isPayed);
+
+        try {
+            this.user.addShoppingList(this.dbManager.getShoppingList(this.user.getId(), name));
+        } catch (DBManagerException e) {
+            throw new UserManagerException("ShoppingList not added", e);
+        }
+    }
+
+    public void addShoppingListEntry(ShoppingList shoppingList, String entryName, double price, boolean isTaken){
+        this.dbManager.addShoppingListEntry(shoppingList.getDbID(), entryName, price, isTaken);
+
+        ShoppingListEntry entry = this.dbManager.getLastShoppingListEntry();
+
+        shoppingList.addEntry(entry);
     }
 
     private boolean validateEmail(String email){
@@ -217,5 +250,15 @@ public class UserManager {
         }
 
         return true;
+    }
+
+    public void updateShoppingListEntry(ShoppingListEntry entry, String name, double newPrice, boolean isTaken) {
+        this.dbManager.updateEntry(entry, name, newPrice, isTaken);
+
+        entry.update(name, newPrice, isTaken);
+    }
+
+    public boolean hasLoggedUser() {
+        return this.user != null;
     }
 }

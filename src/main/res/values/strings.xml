@@ -45,4 +45,20 @@
     <string name="accountName">account name</string>
     <string name="withdraw">withdraw -</string>
     <string name="history">History</string>
+    <string name="shopping_list">Shopping lists</string>
+    <string name="enterSLName">Please enter shopping list\'s name</string>
+    <string name="sLName">shopping list name</string>
+    <string name="total">Total: </string>
+    <string name="calculate">Calculate</string>
+    <string name="pay">Pay</string>
+    <string name="price">price</string>
+    <string name="totalSum">Total sum: </string>
+    <string name="selectedSum">Selected items sum</string>
+    <string name="selected">Selected: </string>
+    <string name="pickPrice">Please, pick price</string>
+    <string name="other">Other:</string>
+    <string name="pickAccount">Please pick account</string>
+    <string name="cancel">cancel</string>
+    <string name="openDrawer"></string>
+    <string name="closeDrawer"></string>
 </resources>

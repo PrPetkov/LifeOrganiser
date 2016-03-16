@@ -2,18 +2,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.lifeorganiser.src.controllers.TODOFragment">
+    tools:context=".src.controllers.todoFragments.TODOFragment">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:layout_gravity=""
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
+            android:textSize="30sp"
             android:text="@string/todoList"/>
 
         <TextView
@@ -24,7 +24,7 @@
         <ListView
             android:id="@+id/todoFragmentShortTermListView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="200dp"/>
         <TextView
             android:id="@+id/todoFragmentMidTermText"
             android:layout_width="wrap_content"
@@ -33,7 +33,7 @@
         <ListView
             android:id="@+id/todoFragmentMidTermListView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="200dp" />
         <TextView
             android:id="@+id/todoFragmentLongTermText"
             android:layout_width="wrap_content"
@@ -42,7 +42,6 @@
         <ListView
             android:id="@+id/todoFragmentLongTermListView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
+            android:layout_height="200dp" />
     </LinearLayout>
 </ScrollView>

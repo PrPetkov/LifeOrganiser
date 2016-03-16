@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="15dp"
-    tools:context="com.example.lifeorganiser.src.controllers.AddTaskDialog">
+    tools:context=".src.controllers.taskFragments.AddTaskDialog">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">

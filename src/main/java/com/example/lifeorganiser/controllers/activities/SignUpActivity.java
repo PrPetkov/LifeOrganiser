@@ -1,5 +1,11 @@
-package com.example.lifeorganiser.src.controllers;
+package com.example.lifeorganiser.src.controllers.activities;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -72,10 +78,43 @@ public class SignUpActivity extends AppCompatActivity {
                     Toast.makeText(SignUpActivity.this,
                             "Congratulations, you have registered successfully",
                             Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                    startActivity(intent);
+
+                    makeNotification();
                 } catch (UserManagerException e) {
                     Toast.makeText(SignUpActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    private void makeNotification(){
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(SignUpActivity.this);
+                mBuilder.setSmallIcon(R.drawable.icon_notification);
+                mBuilder.setContentTitle("Welcome to LifeOrganiser");
+                mBuilder.setContentText("You are lucky to be on of the exclusive testers of tis app!");
+
+                Intent resultIntent = new Intent(SignUpActivity.this, MainActivity.class);
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(SignUpActivity.this);
+                stackBuilder.addParentStack(MainActivity.class);
+
+                // Adds the Intent that starts the Activity to the top of the stack
+                stackBuilder.addNextIntent(resultIntent);
+                PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                mBuilder.setContentIntent(resultPendingIntent);
+
+                NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                mNotificationManager.notify(0, mBuilder.build());
+            }
+        });
+
+        thread.start();
     }
 }

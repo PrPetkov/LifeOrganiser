@@ -8,20 +8,23 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".src.controllers.LogInActivity">
+        <activity android:name=".src.controllers.activities.LogInActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".src.controllers.SignUpActivity" />
+        <activity android:name=".src.controllers.activities.SignUpActivity"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".src.controllers.MainActivity"
+            android:name=".src.controllers.activities.MainActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_today"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".src.controllers.TODOListActivity" />
-        <activity android:name=".src.controllers.MyApp"></activity>
+            android:theme="@style/AppTheme.NoActionBar" >
+
+            </activity>
     </application>
 
 </manifest>

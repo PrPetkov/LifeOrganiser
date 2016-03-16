@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="15dp"
-    tools:context=".src.controllers.TaskViewDialogFragment"
+    tools:context=".src.controllers.taskFragments.TaskViewDialogFragment"
     android:gravity="center_horizontal">
 
     <ScrollView

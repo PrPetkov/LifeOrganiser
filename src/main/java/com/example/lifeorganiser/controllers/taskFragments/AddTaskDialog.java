@@ -1,15 +1,14 @@
-package com.example.lifeorganiser.src.controllers;
+package com.example.lifeorganiser.src.controllers.taskFragments;
 
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -19,7 +18,6 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.example.lifeorganiser.R;
 import com.example.lifeorganiser.src.Models.Exceptions.IllegalAmountException;
@@ -27,6 +25,7 @@ import com.example.lifeorganiser.src.Models.accounts.DebitAccount;
 import com.example.lifeorganiser.src.Models.events.NotificationEvent;
 import com.example.lifeorganiser.src.Models.events.PaymentEvent;
 import com.example.lifeorganiser.src.Models.user.UserManager;
+import com.example.lifeorganiser.src.controllers.todayFragments.TodayFragment;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,6 +65,8 @@ public class AddTaskDialog extends DialogFragment {
         this.expensesRadio = (RadioButton) v.findViewById(R.id.expensesRadio);
         this.howMuchText = (TextView) v.findViewById(R.id.addTaskHowMuch);
         this.spinner = (Spinner) v.findViewById(R.id.addTaskSpinner);
+
+        this.incomeRadio.setChecked(true);
 
         final ArrayList<DebitAccount> accounts = this.userManager.getDebitAccounts();
         ArrayList<String> stringAccounts = new ArrayList<>();
@@ -121,7 +122,7 @@ public class AddTaskDialog extends DialogFragment {
 
                 if (AddTaskDialog.this.isPayable.isChecked()) {
                     double amount = Double.parseDouble(AddTaskDialog.this.eventAmount.getText().toString());
-                    //TODO fix bug make the radio to be used!!!
+
                     boolean isIncome = AddTaskDialog.this.incomeRadio.isChecked();
 
                     int accountPos = AddTaskDialog.this.spinner.getSelectedItemPosition();
@@ -136,6 +137,11 @@ public class AddTaskDialog extends DialogFragment {
                 } else {
                     AddTaskDialog.this.userManager.addEvent(new NotificationEvent(eventName, eventDescription, dateTime));
                 }
+
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                TasksFragment fragment = new TasksFragment();
+                transaction.replace(R.id.fragmentLayout, fragment);
+                transaction.commit();
             }
         });
 

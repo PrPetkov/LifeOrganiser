@@ -3,18 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".src.controllers.accountFragments.AccountsFragment">
+    tools:context=".src.controllers.shoppingListFragments.ShoppingListGetNameDialogFragment">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="30sp"
-        android:text="@string/accounts"
-        android:gravity="center_horizontal"/>
+        android:text="@string/enterSLName"/>
 
-    <ListView
-        android:id="@+id/accountsListView"
+    <EditText
+        android:id="@+id/shoppingListGetName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:hint="@string/sLName"/>
 
 </LinearLayout>

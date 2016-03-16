@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.lifeorganiser.src.controllers.AddTODODialogFragment">
+    tools:context=".src.controllers.todoFragments.AddTODODialogFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

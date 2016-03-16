@@ -1,9 +1,9 @@
-package com.example.lifeorganiser.src.controllers;
+package com.example.lifeorganiser.src.controllers.accountFragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.example.lifeorganiser.R;
 import com.example.lifeorganiser.src.Models.Exceptions.UserManagerException;
-import com.example.lifeorganiser.src.Models.accounts.DebitAccount;
 import com.example.lifeorganiser.src.Models.user.UserManager;
 
 
@@ -50,6 +49,11 @@ public class AddAccountDialogFragment extends DialogFragment {
                 } catch (UserManagerException e) {
                     Toast.makeText(getActivity().getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
+
+                AccountsFragment accountsFragment = new AccountsFragment();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragmentLayout, accountsFragment);
+                transaction.commit();
             }
         });
 

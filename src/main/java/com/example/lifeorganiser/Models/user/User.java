@@ -122,4 +122,7 @@ public class User {
         this.debitAccounts.add(account);
     }
 
+	public ArrayList<ShoppingList> getAllShoppingLists(){
+        return this.shoppingList;
+    }
 }

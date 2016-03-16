@@ -1,4 +1,4 @@
-package com.example.lifeorganiser.src.controllers;
+package com.example.lifeorganiser.src.controllers.accountFragments;
 
 
 import android.app.FragmentManager;

@@ -2,25 +2,29 @@ package com.example.lifeorganiser.src.Models.events;
 
 import com.example.lifeorganiser.src.Models.Exceptions.IllegalAmountException;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ShoppingList {
+public class ShoppingList implements Serializable {
 
 	private boolean isPaid;
-	private double amount;
-	private HashMap<String, Double> shoppingEntries;
+	private String name;
+	private int dbID;
+	private ArrayList<ShoppingListEntry> shoppingEntries;
 
-	public ShoppingList() {
-		this.amount = 0;
-		this.isPaid = false;
-		this.shoppingEntries = new HashMap<String, Double>();
+	public ShoppingList(String name, int dbID, boolean isPaid) {
+		this.name = name;
+		this.dbID = dbID;
+		this.isPaid = isPaid;
+		this.shoppingEntries = new ArrayList<>();
 	}
 
 	// methods
-	public void addEntry(String name, Double amount) {
-		if (setEntryAmount(amount)) {
-			this.shoppingEntries.put(name, amount);
+	public void addEntry(ShoppingListEntry entry) {
+		if (setEntryAmount(entry.getPrice())) {
+			this.shoppingEntries.add(entry);
 		}
 	}
 	
@@ -37,32 +41,26 @@ public class ShoppingList {
 		return true;
 	}
 
-	public void removeEntry(String name) {
-		if (this.shoppingEntries.containsKey(name)) {
-			this.shoppingEntries.remove(name);
-		}
-	}
-
 	public double getAmountOfAllEntries() {
 		double currentAmountOfList = 0;
-		
-		for (Map.Entry<String, Double> map : this.shoppingEntries.entrySet()) {
-			if (map.getKey() == null) {
-				continue;
-			}
-			
-			currentAmountOfList += map.getValue();
-		}
+
+		for (ShoppingListEntry entry : this.shoppingEntries){
+            currentAmountOfList += entry.getPrice();
+        }
 		
 		return currentAmountOfList;
 	}
 
-	public void setAmountOfShoppingList(double amount) throws IllegalAmountException {
-		if (this.amount > 0) {
-			this.amount = amount;
-		} else {
-			throw new IllegalAmountException("The amount must be positive !");
+	public double getAmountOfAllTakenEnties(){
+		double currentAmountOfList = 0;
+
+		for (ShoppingListEntry entry : this.shoppingEntries){
+			if (entry.isTaken()) {
+				currentAmountOfList += entry.getPrice();
+			}
 		}
+
+		return currentAmountOfList;
 	}
 	
 	// getters and setters
@@ -70,8 +68,23 @@ public class ShoppingList {
 		return this.isPaid;
 	}
 
-	HashMap<String, Double> getShoppingEntries() {
+	ArrayList<ShoppingListEntry> getShoppingEntries() {
 		return shoppingEntries;
 	}
 
+	public boolean isPaid() {
+		return isPaid;
+	}
+
+	public int getDbID() {
+		return dbID;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public ArrayList<ShoppingListEntry> getEntries(){
+		return this.shoppingEntries;
+	}
 }
